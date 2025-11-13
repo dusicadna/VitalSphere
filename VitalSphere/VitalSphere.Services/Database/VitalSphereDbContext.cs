@@ -21,6 +21,7 @@ namespace VitalSphere.Services.Database
         public DbSet<WellnessBox> WellnessBoxes { get; set; }
         public DbSet<Gift> Gifts { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Review> Reviews { get; set; }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -117,6 +118,22 @@ namespace VitalSphere.Services.Database
 
             modelBuilder.Entity<Appointment>()
                 .HasIndex(a => new { a.UserId, a.WellnessServiceId, a.ScheduledAt });
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.User)
+                .WithMany(u => u.Reviews)
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Appointment)
+                .WithOne(a => a.Review)
+                .HasForeignKey<Review>(r => r.AppointmentId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Review>()
+                .HasIndex(r => new { r.UserId, r.AppointmentId })
+                .IsUnique();
 
             modelBuilder.Entity<WellnessBox>()
                 .HasIndex(w => w.Name)

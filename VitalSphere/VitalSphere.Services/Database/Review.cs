@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace VitalSphere.Services.Database
 {
-    public class Appointment
+    public class Review
     {
         [Key]
         public int Id { get; set; }
@@ -15,19 +15,17 @@ namespace VitalSphere.Services.Database
         public User User { get; set; } = null!;
 
         [Required]
-        [ForeignKey(nameof(WellnessService))]
-        public int WellnessServiceId { get; set; }
-        public WellnessService WellnessService { get; set; } = null!;
+        [ForeignKey(nameof(Appointment))]
+        public int AppointmentId { get; set; }
+        public Appointment Appointment { get; set; } = null!;
 
-        [Required]
-        public DateTime ScheduledAt { get; set; }
+        [Range(1, 5)]
+        public int Rating { get; set; }
 
-        [MaxLength(500)]
-        public string? Notes { get; set; }
+        [MaxLength(1000)]
+        public string? Comment { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        public Review? Review { get; set; }
     }
 }
 

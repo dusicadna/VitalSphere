@@ -55,5 +55,6 @@ namespace VitalSphere.Services.Database
 
         public ICollection<Gift> Gifts { get; set; } = new List<Gift>();
         public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
+        public ICollection<Review> Reviews { get; set; } = new List<Review>();
     }
 } 
