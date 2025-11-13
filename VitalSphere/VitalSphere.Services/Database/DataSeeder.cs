@@ -7,7 +7,7 @@ namespace VitalSphere.Services.Database
     public static class DataSeeder
     {
         private const string DefaultPhoneNumber = "+387 00 000 000";
-        
+
         private const string TestMailSender = "test.sender@gmail.com";
         private const string TestMailReceiver = "test.receiver@gmail.com";
 
@@ -18,27 +18,27 @@ namespace VitalSphere.Services.Database
 
             // Seed Roles
             modelBuilder.Entity<Role>().HasData(
-                new Role 
-                { 
-                    Id = 1, 
-                    Name = "Administrator", 
-                    Description = "System administrator with full access", 
-                    CreatedAt = fixedDate, 
-                    IsActive = true 
+                new Role
+                {
+                    Id = 1,
+                    Name = "Administrator",
+                    Description = "System administrator with full access",
+                    CreatedAt = fixedDate,
+                    IsActive = true
                 },
-                new Role 
-                { 
-                    Id = 2, 
-                    Name = "User", 
-                    Description = "Regular user role", 
-                    CreatedAt = fixedDate, 
-                    IsActive = true 
+                new Role
+                {
+                    Id = 2,
+                    Name = "User",
+                    Description = "Regular user role",
+                    CreatedAt = fixedDate,
+                    IsActive = true
                 }
             );
 
             // Seed Users
             modelBuilder.Entity<User>().HasData(
-                new User 
+                new User
                 {
                     Id = 1,
                     FirstName = "Adil",
@@ -54,48 +54,48 @@ namespace VitalSphere.Services.Database
                     CityId = 5, // Mostar
                     Picture = ImageConversion.ConvertImageToByteArray("Assets", "adil.png")
                 },
-                new User 
-                { 
-                    Id = 2, 
-                    FirstName = "Adna", 
+                new User
+                {
+                    Id = 2,
+                    FirstName = "Adna",
                     LastName = "Dušić",
                     Email = "cinevibe.reciever@gmail.com",
-                    Username = "user", 
-                    PasswordHash = "kDPVcZaikiII7vXJbMEw6B0xZ245I29ocaxBjLaoAC0=", 
-                    PasswordSalt = "O5R9WmM6IPCCMci/BCG/eg==", 
-                    IsActive = true, 
+                    Username = "user",
+                    PasswordHash = "kDPVcZaikiII7vXJbMEw6B0xZ245I29ocaxBjLaoAC0=",
+                    PasswordSalt = "O5R9WmM6IPCCMci/BCG/eg==",
+                    IsActive = true,
                     CreatedAt = fixedDate,
                     PhoneNumber = DefaultPhoneNumber,
                     GenderId = 1, // Male
                     CityId = 5, // Mostar
                     //Picture = ImageConversion.ConvertImageToByteArray("Assets", "amel.png")
                 },
-                new User 
-                { 
-                    Id = 3, 
-                    FirstName = "Denis", 
+                new User
+                {
+                    Id = 3,
+                    FirstName = "Denis",
                     LastName = "Mušić",
                     Email = "example2@gmail.com",
-                    Username = "admin2", 
-                    PasswordHash = "BiWDuil9svAKOYzii5wopQW3YqjVfQrzGE2iwH/ylY4=", 
-                    PasswordSalt = "pfNS+OLBaQeGqBIzXXcWuA==", 
-                    IsActive = true, 
+                    Username = "admin2",
+                    PasswordHash = "BiWDuil9svAKOYzii5wopQW3YqjVfQrzGE2iwH/ylY4=",
+                    PasswordSalt = "pfNS+OLBaQeGqBIzXXcWuA==",
+                    IsActive = true,
                     CreatedAt = fixedDate,
                     PhoneNumber = DefaultPhoneNumber,
                     GenderId = 1, // Male
                     CityId = 5, // Mostar
                     Picture = ImageConversion.ConvertImageToByteArray("Assets", "adil.png")
                 },
-                new User 
-                { 
-                    Id = 4, 
-                    FirstName = "Amel", 
-                    LastName = "Musić", 
-                    Email = TestMailSender, 
-                    Username = "user2", 
-                    PasswordHash = "KUF0Jsocq9AqdwR9JnT2OrAqm5gDj7ecQvNwh6fW/Bs=", 
-                    PasswordSalt = "c3ZKo0va3tYfnYuNKkHDbQ==", 
-                    IsActive = true, 
+                new User
+                {
+                    Id = 4,
+                    FirstName = "Amel",
+                    LastName = "Musić",
+                    Email = TestMailSender,
+                    Username = "user2",
+                    PasswordHash = "KUF0Jsocq9AqdwR9JnT2OrAqm5gDj7ecQvNwh6fW/Bs=",
+                    PasswordSalt = "c3ZKo0va3tYfnYuNKkHDbQ==",
+                    IsActive = true,
                     CreatedAt = fixedDate,
                     PhoneNumber = DefaultPhoneNumber,
                     GenderId = 2, // Female
@@ -106,10 +106,10 @@ namespace VitalSphere.Services.Database
 
             // Seed UserRoles
             modelBuilder.Entity<UserRole>().HasData(
-                new UserRole { Id = 1, UserId = 1, RoleId = 1, DateAssigned = fixedDate }, 
-                new UserRole { Id = 2, UserId = 2, RoleId = 1, DateAssigned = fixedDate }, 
-                new UserRole { Id = 3, UserId = 3, RoleId = 2, DateAssigned = fixedDate }, 
-                new UserRole { Id = 4, UserId = 4, RoleId = 2, DateAssigned = fixedDate }  
+                new UserRole { Id = 1, UserId = 1, RoleId = 1, DateAssigned = fixedDate },
+                new UserRole { Id = 2, UserId = 2, RoleId = 1, DateAssigned = fixedDate },
+                new UserRole { Id = 3, UserId = 3, RoleId = 2, DateAssigned = fixedDate },
+                new UserRole { Id = 4, UserId = 4, RoleId = 2, DateAssigned = fixedDate }
             );
 
             // Seed Genders
@@ -155,38 +155,38 @@ namespace VitalSphere.Services.Database
 
             // Seed Wellness Service Categories
             modelBuilder.Entity<WellnessServiceCategory>().HasData(
-    new WellnessServiceCategory 
-    { 
-        Id = 1, 
-        Name = "Body & Fitness", 
-        Description = "Focus on building strength, flexibility, and overall physical wellness through guided workouts, personalized training, and fitness programs designed for all levels.", 
+    new WellnessServiceCategory
+    {
+        Id = 1,
+        Name = "Body & Fitness",
+        Description = "Focus on building strength, flexibility, and overall physical wellness through guided workouts, personalized training, and fitness programs designed for all levels.",
         Image = ImageConversion.ConvertImageToByteArray("Assets", "wsc1.png"),
         CreatedAt = fixedDate,
         IsActive = true
     },
-    new WellnessServiceCategory 
-    { 
-        Id = 2, 
-        Name = "Massage & Relaxation", 
-        Description = "Restore balance and relieve tension with a variety of therapeutic massages and relaxation techniques aimed at reducing stress and revitalizing your body and mind.", 
+    new WellnessServiceCategory
+    {
+        Id = 2,
+        Name = "Massage & Relaxation",
+        Description = "Restore balance and relieve tension with a variety of therapeutic massages and relaxation techniques aimed at reducing stress and revitalizing your body and mind.",
         Image = ImageConversion.ConvertImageToByteArray("Assets", "wsc2.png"),
         CreatedAt = fixedDate,
         IsActive = true
     },
-    new WellnessServiceCategory 
-    { 
-        Id = 3, 
-        Name = "Mind & Balance", 
-        Description = "Achieve inner peace and mental clarity through yoga, meditation, and mindfulness practices designed to harmonize your body, mind, and spirit.", 
+    new WellnessServiceCategory
+    {
+        Id = 3,
+        Name = "Mind & Balance",
+        Description = "Achieve inner peace and mental clarity through yoga, meditation, and mindfulness practices designed to harmonize your body, mind, and spirit.",
         Image = ImageConversion.ConvertImageToByteArray("Assets", "wsc3.png"),
         CreatedAt = fixedDate,
         IsActive = true
     },
-    new WellnessServiceCategory 
-    { 
-        Id = 4, 
-        Name = "Hydro & Thermal", 
-        Description = "Experience the soothing power of water and heat with our sauna, steam, and pool therapies that promote detoxification, relaxation, and rejuvenation.", 
+    new WellnessServiceCategory
+    {
+        Id = 4,
+        Name = "Hydro & Thermal",
+        Description = "Experience the soothing power of water and heat with our sauna, steam, and pool therapies that promote detoxification, relaxation, and rejuvenation.",
         Image = ImageConversion.ConvertImageToByteArray("Assets", "wsc4.png"),
         CreatedAt = fixedDate,
         IsActive = true
@@ -194,164 +194,274 @@ namespace VitalSphere.Services.Database
         );
 
 
-// Seed Wellness Services
-modelBuilder.Entity<WellnessService>().HasData(
-    // 🧘‍♀️ Body & Fitness
-    new WellnessService 
-    { 
-        Id = 1, 
-        Name = "Personal Training", 
-        Description = "One-on-one customized fitness sessions focused on achieving your individual health and strength goals with professional guidance.", 
-        Price = 60,
-        DurationMinutes = 60,
-        WellnessServiceCategoryId = 1, 
-        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws1.png"),
-        CreatedAt = fixedDate,
-        IsActive = true
-    },
-    new WellnessService 
-    { 
-        Id = 2, 
-        Name = "Pilates Class", 
-        Description = "Low-impact sessions that improve flexibility, posture, and core strength through controlled movement and breathing techniques.", 
-        Price = 50,
-        DurationMinutes = 60,
-        WellnessServiceCategoryId = 1, 
-            Image = ImageConversion.ConvertImageToByteArray("Assets", "ws2.png"),
-        CreatedAt = fixedDate,
-        IsActive = true
-    },
+            // Seed Wellness Services
+            modelBuilder.Entity<WellnessService>().HasData(
+                // 🧘‍♀️ Body & Fitness
+                new WellnessService
+                {
+                    Id = 1,
+                    Name = "Personal Training",
+                    Description = "One-on-one customized fitness sessions focused on achieving your individual health and strength goals with professional guidance.",
+                    Price = 60,
+                    DurationMinutes = 60,
+                    WellnessServiceCategoryId = 1,
+                    Image = ImageConversion.ConvertImageToByteArray("Assets", "ws1.png"),
+                    CreatedAt = fixedDate,
+                    IsActive = true
+                },
+                new WellnessService
+                {
+                    Id = 2,
+                    Name = "Pilates Class",
+                    Description = "Low-impact sessions that improve flexibility, posture, and core strength through controlled movement and breathing techniques.",
+                    Price = 50,
+                    DurationMinutes = 60,
+                    WellnessServiceCategoryId = 1,
+                    Image = ImageConversion.ConvertImageToByteArray("Assets", "ws2.png"),
+                    CreatedAt = fixedDate,
+                    IsActive = true
+                },
 
-    // 🌿 Massage & Relaxation
-    new WellnessService 
-    { 
-        Id = 3, 
-        Name = "Aromatherapy Massage", 
-        Description = "A calming massage experience using essential oils to reduce stress, ease tension, and improve emotional well-being.", 
-        Price = 80,
-        DurationMinutes = 60,
-        WellnessServiceCategoryId = 2, 
-        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws3.png"),
-        CreatedAt = fixedDate,
-        IsActive = true
-    },
-    new WellnessService 
-    { 
-        Id = 4, 
-        Name = "Deep Tissue Massage", 
-        Description = "Therapeutic massage focused on deeper layers of muscle and connective tissue to relieve chronic pain and stiffness.", 
-        Price = 100,
-        DurationMinutes = 60,
-        WellnessServiceCategoryId = 2, 
-        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws4.png"),
-        CreatedAt = fixedDate,
-        IsActive = true
-    },
+                // 🌿 Massage & Relaxation
+                new WellnessService
+                {
+                    Id = 3,
+                    Name = "Aromatherapy Massage",
+                    Description = "A calming massage experience using essential oils to reduce stress, ease tension, and improve emotional well-being.",
+                    Price = 80,
+                    DurationMinutes = 60,
+                    WellnessServiceCategoryId = 2,
+                    Image = ImageConversion.ConvertImageToByteArray("Assets", "ws3.png"),
+                    CreatedAt = fixedDate,
+                    IsActive = true
+                },
+                new WellnessService
+                {
+                    Id = 4,
+                    Name = "Deep Tissue Massage",
+                    Description = "Therapeutic massage focused on deeper layers of muscle and connective tissue to relieve chronic pain and stiffness.",
+                    Price = 100,
+                    DurationMinutes = 60,
+                    WellnessServiceCategoryId = 2,
+                    Image = ImageConversion.ConvertImageToByteArray("Assets", "ws4.png"),
+                    CreatedAt = fixedDate,
+                    IsActive = true
+                },
 
-    // 🧠 Mind & Balance
-    new WellnessService 
-    { 
-        Id = 5, 
-        Name = "Yoga Session", 
-        Description = "Guided yoga practice combining physical postures, breathing exercises, and mindfulness for total body and mind harmony.", 
-        Price = 50,
-        DurationMinutes = 60,
-        WellnessServiceCategoryId = 3, 
-        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws5.png"),
-        CreatedAt = fixedDate,
-        IsActive = true
-    },
-    new WellnessService 
-    { 
-        Id = 6, 
-        Name = "Meditation Class", 
-        Description = "Calming guided meditation sessions to enhance focus, relieve stress, and promote emotional balance and awareness.", 
-        Price = 40,
-        DurationMinutes = 60,
-        WellnessServiceCategoryId = 3, 
-        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws6.png"),
-        CreatedAt = fixedDate,
-        IsActive = true
-    },
+                // 🧠 Mind & Balance
+                new WellnessService
+                {
+                    Id = 5,
+                    Name = "Yoga Session",
+                    Description = "Guided yoga practice combining physical postures, breathing exercises, and mindfulness for total body and mind harmony.",
+                    Price = 50,
+                    DurationMinutes = 60,
+                    WellnessServiceCategoryId = 3,
+                    Image = ImageConversion.ConvertImageToByteArray("Assets", "ws5.png"),
+                    CreatedAt = fixedDate,
+                    IsActive = true
+                },
+                new WellnessService
+                {
+                    Id = 6,
+                    Name = "Meditation Class",
+                    Description = "Calming guided meditation sessions to enhance focus, relieve stress, and promote emotional balance and awareness.",
+                    Price = 40,
+                    DurationMinutes = 60,
+                    WellnessServiceCategoryId = 3,
+                    Image = ImageConversion.ConvertImageToByteArray("Assets", "ws6.png"),
+                    CreatedAt = fixedDate,
+                    IsActive = true
+                },
 
-    // 💧 Hydro & Thermal
-    new WellnessService 
-    { 
-        Id = 7, 
-        Name = "Sauna Session", 
-        Description = "Relaxing heat therapy that promotes detoxification, muscle recovery, and improved circulation through dry or steam sauna environments.", 
-        Price = 30,
-        DurationMinutes = 90,
-        WellnessServiceCategoryId = 4, 
-        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws7.png"),
-        CreatedAt = fixedDate,
-        IsActive = true
-    },
-    new WellnessService 
-    { 
-        Id = 8, 
-        Name = "Pool & Hydrotherapy", 
-        Description = "Invigorating pool-based relaxation and gentle water exercises that improve mobility, tone muscles, and calm the mind.", 
-        Price = 40,
-        DurationMinutes = 160,
-        WellnessServiceCategoryId = 4,   
-        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws8.png"),
-        CreatedAt = fixedDate,
-        IsActive = true
-    }
-);
-
-
-         // Seed Wellness Boxes
-modelBuilder.Entity<WellnessBox>().HasData(
-    new WellnessBox
-    {
-        Id = 1,
-        Name = "Welcome Wellness Box",
-        Description = "A special starter kit given to all new clients when they schedule their first wellness service — a gentle introduction to relaxation and self-care.",
-        IncludedItems = "Herbal tea blend, Relaxation eye mask, Mini essential oil (lavender), Welcome card with wellness tips",
-        Image = ImageConversion.ConvertImageToByteArray("Assets", "wb1.png"),
-        CreatedAt = fixedDate,
-        IsActive = true
-    },
-    new WellnessBox
-    {
-        Id = 2,
-        Name = "Relax & Restore Box",
-        Description = "A soothing box designed to help you unwind and recover after your massage or sauna session.",
-        IncludedItems = "Scented candle, Bath salts, Body lotion, Herbal relaxation pillow",
-        Image = ImageConversion.ConvertImageToByteArray("Assets", "wb2.png"),
-        CreatedAt = fixedDate,
-        IsActive = true
-    },
-    new WellnessBox
-    {
-        Id = 3,
-        Name = "Active Body Box",
-        Description = "An energizing set for fitness lovers — perfect for recovery and motivation after active sessions.",
-        IncludedItems = "Protein snack, Resistance band, Cooling towel, Mini muscle balm",
-        Image = ImageConversion.ConvertImageToByteArray("Assets", "wb3.png"),
-        CreatedAt = fixedDate,
-        IsActive = true
-    },
-    new WellnessBox
-    {
-        Id = 4,
-        Name = "Mind & Balance Box",
-        Description = "A calming box that encourages mindfulness and balance through reflection and relaxation.",
-        IncludedItems = "Gratitude journal, Meditation candle, Incense sticks, Affirmation cards",
-        Image = ImageConversion.ConvertImageToByteArray("Assets", "wb4.png"),
-        CreatedAt = fixedDate,
-        IsActive = true
-    }
-);
+                // 💧 Hydro & Thermal
+                new WellnessService
+                {
+                    Id = 7,
+                    Name = "Sauna Session",
+                    Description = "Relaxing heat therapy that promotes detoxification, muscle recovery, and improved circulation through dry or steam sauna environments.",
+                    Price = 30,
+                    DurationMinutes = 90,
+                    WellnessServiceCategoryId = 4,
+                    Image = ImageConversion.ConvertImageToByteArray("Assets", "ws7.png"),
+                    CreatedAt = fixedDate,
+                    IsActive = true
+                },
+                new WellnessService
+                {
+                    Id = 8,
+                    Name = "Pool & Hydrotherapy",
+                    Description = "Invigorating pool-based relaxation and gentle water exercises that improve mobility, tone muscles, and calm the mind.",
+                    Price = 40,
+                    DurationMinutes = 160,
+                    WellnessServiceCategoryId = 4,
+                    Image = ImageConversion.ConvertImageToByteArray("Assets", "ws8.png"),
+                    CreatedAt = fixedDate,
+                    IsActive = true
+                }
+            );
 
 
+            // Seed Wellness Boxes
+            modelBuilder.Entity<WellnessBox>().HasData(
+                new WellnessBox
+                {
+                    Id = 1,
+                    Name = "Welcome Wellness Box",
+                    Description = "A special starter kit given to all new clients when they schedule their first wellness service — a gentle introduction to relaxation and self-care.",
+                    IncludedItems = "Herbal tea blend, Relaxation eye mask, Mini essential oil (lavender), Welcome card with wellness tips",
+                    Image = ImageConversion.ConvertImageToByteArray("Assets", "wb1.png"),
+                    CreatedAt = fixedDate,
+                    IsActive = true
+                },
+                new WellnessBox
+                {
+                    Id = 2,
+                    Name = "Relax & Restore Box",
+                    Description = "A soothing box designed to help you unwind and recover after your massage or sauna session.",
+                    IncludedItems = "Scented candle, Bath salts, Body lotion, Herbal relaxation pillow",
+                    Image = ImageConversion.ConvertImageToByteArray("Assets", "wb2.png"),
+                    CreatedAt = fixedDate,
+                    IsActive = true
+                },
+                new WellnessBox
+                {
+                    Id = 3,
+                    Name = "Active Body Box",
+                    Description = "An energizing set for fitness lovers — perfect for recovery and motivation after active sessions.",
+                    IncludedItems = "Protein snack, Resistance band, Cooling towel, Mini muscle balm",
+                    Image = ImageConversion.ConvertImageToByteArray("Assets", "wb3.png"),
+                    CreatedAt = fixedDate,
+                    IsActive = true
+                },
+                new WellnessBox
+                {
+                    Id = 4,
+                    Name = "Mind & Balance Box",
+                    Description = "A calming box that encourages mindfulness and balance through reflection and relaxation.",
+                    IncludedItems = "Gratitude journal, Meditation candle, Incense sticks, Affirmation cards",
+                    Image = ImageConversion.ConvertImageToByteArray("Assets", "wb4.png"),
+                    CreatedAt = fixedDate,
+                    IsActive = true
+                }
+            );
 
 
+            // Seed Brands
+            modelBuilder.Entity<Brand>().HasData(
+                new Brand
+                {
+                    Id = 1,
+                    Name = "AuraHome",
+                    IsActive = true,
+                    CreatedAt = fixedDate
+                },
+                new Brand
+                {
+                    Id = 2,
+                    Name = "PureZen Naturals",
+                    IsActive = true,
+                    CreatedAt = fixedDate
+                },
 
+                new Brand
+                {
+                    Id = 3,
+                    Name = "CalmRoots",
+                    IsActive = true,
+                    CreatedAt = fixedDate
+                },
+                new Brand
+                {
+                    Id = 4,
+                    Name = "GlowVita",
+                    IsActive = true,
+                    CreatedAt = fixedDate
+                }
+
+            );
+
+            // Seed Product Categories
+            modelBuilder.Entity<ProductCategory>().HasData(
+                new ProductCategory
+                {
+                    Id = 1,
+                    Name = "Aromatherapy",
+                    Description = "Aromatherapy is the use of essential oils to promote physical and mental well-being.",
+                    IsActive = true,
+                },
+                new ProductCategory
+                {
+                    Id = 2,
+                    Name = "Body Care",
+                    Description = "Body care is the practice of taking care of the body to maintain its health and appearance.",
+                    IsActive = true,
+                },
+                new ProductCategory
+                {
+                    Id = 3,
+                    Name = "Essential Oils",
+                    Description = "Essential oils are concentrated liquids derived from plants that are used for their therapeutic properties.",
+                    IsActive = true,
+                },
+                new ProductCategory
+                {
+                    Id = 4,
+                    Name = "Skincare",
+                    Description = "Skincare is the practice of taking care of the skin to maintain its health and appearance.",
+                    IsActive = true,
+                }
+            );
+
+            // Seed Products
+            modelBuilder.Entity<Product>().HasData(
+                new Product
+                {
+                    Id = 1,
+                    Name = "Serenity Soy Candle",
+                    Price = 5,
+                    IsActive = true,
+                    CreatedAt = fixedDate,
+                    ProductCategoryId = 1,
+                    BrandId = 1,
+                    Picture = ImageConversion.ConvertImageToByteArray("Assets", "p1.png")
+                },
+                new Product
+                {
+                    Id = 2,
+                    Name = "Himalayan Bath Salt Blend",
+                    Price = 15,
+                    IsActive = true,
+                    CreatedAt = fixedDate,
+                    ProductCategoryId = 2,
+                    BrandId = 2,
+                    Picture = ImageConversion.ConvertImageToByteArray("Assets", "p2.png")
+                },
+                new Product
+                {
+                    Id = 3,
+                    Name = "Revitalize Essential Oil Roller",
+                    Price = 30,
+                    IsActive = true,
+                    CreatedAt = fixedDate,
+                    ProductCategoryId = 3,
+                    BrandId = 3,
+                    Picture = ImageConversion.ConvertImageToByteArray("Assets", "p3.png")
+                },
+                new Product
+                {
+                    Id = 4,
+                    Name = "Deep Hydration Face Mask",
+                    Price = 25,
+                    IsActive = true,
+                    CreatedAt = fixedDate,
+                    ProductCategoryId = 4,
+                    BrandId = 4,
+                    Picture = ImageConversion.ConvertImageToByteArray("Assets", "p4.png")
+                }
+            );
 
 
         }
     }
-} 
+}
