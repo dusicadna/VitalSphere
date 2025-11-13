@@ -63,10 +63,10 @@ namespace VitalSphere.Subscriber.Services
                 {
                     using (var bus = RabbitHutch.CreateBus($"host={_host};virtualHost={_virtualhost};username={_username};password={_password}"))
                     {
-                        // Subscribe to vehicle notifications only
-                        bus.PubSub.Subscribe<VehicleNotification>("Vehicle_Notifications", HandleVehicleMessage);
+                        // Subscribe to appointment notifications
+                        bus.PubSub.Subscribe<AppointmentNotification>("Appointment_Notifications", HandleAppointmentMessage);
 
-                        _logger.LogInformation("Waiting for vehicle notifications...");
+                        _logger.LogInformation("Waiting for appointment notifications...");
                         await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
                     }
                 }
@@ -81,31 +81,40 @@ namespace VitalSphere.Subscriber.Services
             }
         }
 
-        private async Task HandleVehicleMessage(VehicleNotification notification)
+        private async Task HandleAppointmentMessage(AppointmentNotification notification)
         {
-            var vehicle = notification.Vehicle;
+            var appointment = notification.Appointment;
 
-            if (!vehicle.AdminEmails.Any())
+            if (string.IsNullOrWhiteSpace(appointment.UserEmail))
             {
-                _logger.LogWarning("No admin emails provided in the notification");
+                _logger.LogWarning("Appointment notification missing user email.");
                 return;
             }
 
-            var subject = "New Vehicle Pending Review";
-            var message = $"A new vehicle {vehicle.BrandName} {vehicle.Name} is ready to be accepted or rejected.\n" +
-                        $"Please review and take appropriate action.";
+            var subject = "Your wellness appointment is scheduled";
+            var formattedDate = appointment.ScheduledAt.ToString("f");
+            var serviceName = string.IsNullOrWhiteSpace(appointment.WellnessServiceCategoryName)
+                ? appointment.WellnessServiceName
+                : $"{appointment.WellnessServiceName} ({appointment.WellnessServiceCategoryName})";
 
-            foreach (var email in vehicle.AdminEmails)
+            var message = $"Hello {appointment.UserFullName},\n\n" +
+                          $"Your appointment for {serviceName} has been scheduled for {formattedDate}.\n";
+
+            if (!string.IsNullOrWhiteSpace(appointment.Notes))
             {
-                try
-                {
-                    await _emailSender.SendEmailAsync(email, subject, message);
-                    _logger.LogInformation($"Notification sent to admin: {email}");
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError($"Failed to send email to {email}: {ex.Message}");
-                }
+                message += $"\nAdditional notes: {appointment.Notes}\n";
+            }
+
+            message += "\nWe look forward to seeing you!\n\nBest regards,\nVitalSphere Team";
+
+            try
+            {
+                await _emailSender.SendEmailAsync(appointment.UserEmail, subject, message);
+                _logger.LogInformation($"Appointment notification sent to: {appointment.UserEmail}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to send appointment email to {appointment.UserEmail}: {ex.Message}");
             }
         }
     }

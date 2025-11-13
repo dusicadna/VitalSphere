@@ -32,12 +32,20 @@ namespace VitalSphere.Services.Services
             await BeforeInsert(entity, request);
 
             await _context.SaveChangesAsync();
+
+            await AfterInsert(entity, request);
+
             return MapToResponse(entity);
         }
 
         protected virtual async Task BeforeInsert(TEntity entity, TInsert request)
         {
 
+        }
+
+        protected virtual Task AfterInsert(TEntity entity, TInsert request)
+        {
+            return Task.CompletedTask;
         }
 
 
@@ -57,12 +65,20 @@ namespace VitalSphere.Services.Services
             MapUpdateToEntity(entity, request);
 
             await _context.SaveChangesAsync();
+
+            await AfterUpdate(entity, request);
+
             return MapToResponse(entity);
         }
 
         protected virtual async Task BeforeUpdate(TEntity entity, TUpdate request)
         {
 
+        }
+
+        protected virtual Task AfterUpdate(TEntity entity, TUpdate request)
+        {
+            return Task.CompletedTask;
         }
 
         protected virtual void MapUpdateToEntity(TEntity entity, TUpdate request)

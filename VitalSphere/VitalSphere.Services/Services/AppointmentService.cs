@@ -1,3 +1,4 @@
+using EasyNetQ;
 using VitalSphere.Model.Requests;
 using VitalSphere.Model.Responses;
 using VitalSphere.Model.SearchObjects;
@@ -77,7 +78,13 @@ namespace VitalSphere.Services.Services
                 throw new InvalidOperationException("The specified wellness service does not exist.");
             }
 
-            entity.CreatedAt = DateTime.UtcNow;
+            entity.CreatedAt = DateTime.Now;
+        }
+
+        protected override async Task AfterInsert(Appointment entity, AppointmentUpsertRequest request)
+        {
+            await SendAppointmentNotificationAsync(entity.Id);
+            await base.AfterInsert(entity, request);
         }
 
         protected override async Task BeforeUpdate(Appointment entity, AppointmentUpsertRequest request)
@@ -91,6 +98,64 @@ namespace VitalSphere.Services.Services
             {
                 throw new InvalidOperationException("The specified wellness service does not exist.");
             }
+        }
+
+        private async Task SendAppointmentNotificationAsync(int appointmentId)
+        {
+            try
+            {
+                var appointment = await _context.Appointments
+                    .Include(a => a.User)
+                    .Include(a => a.WellnessService)
+                        .ThenInclude(ws => ws.WellnessServiceCategory)
+                    .FirstOrDefaultAsync(a => a.Id == appointmentId);
+
+                if (appointment == null || string.IsNullOrWhiteSpace(appointment.User?.Email))
+                {
+                    return;
+                }
+
+                var host = Environment.GetEnvironmentVariable("RABBITMQ_HOST") ?? "localhost";
+                var username = Environment.GetEnvironmentVariable("RABBITMQ_USERNAME") ?? "guest";
+                var password = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD") ?? "guest";
+                var virtualhost = Environment.GetEnvironmentVariable("RABBITMQ_VIRTUALHOST") ?? "/";
+
+                using var bus = RabbitHutch.CreateBus($"host={host};virtualHost={virtualhost};username={username};password={password}");
+
+                var notification = new AppointmentNotification
+                {
+                    Appointment = new AppointmentNotificationDto
+                    {
+                        UserEmail = appointment.User.Email,
+                        UserFullName = $"{appointment.User.FirstName} {appointment.User.LastName}".Trim(),
+                        WellnessServiceName = appointment.WellnessService?.Name ?? string.Empty,
+                        WellnessServiceCategoryName = appointment.WellnessService?.WellnessServiceCategory?.Name ?? string.Empty,
+                        ScheduledAt = appointment.ScheduledAt,
+                        Notes = appointment.Notes
+                    }
+                };
+
+                await bus.PubSub.PublishAsync(notification);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to send appointment notification: {ex.Message}");
+            }
+        }
+
+        private class AppointmentNotification
+        {
+            public AppointmentNotificationDto Appointment { get; set; } = new AppointmentNotificationDto();
+        }
+
+        private class AppointmentNotificationDto
+        {
+            public string UserEmail { get; set; } = string.Empty;
+            public string UserFullName { get; set; } = string.Empty;
+            public string WellnessServiceName { get; set; } = string.Empty;
+            public string WellnessServiceCategoryName { get; set; } = string.Empty;
+            public DateTime ScheduledAt { get; set; }
+            public string? Notes { get; set; }
         }
     }
 }
