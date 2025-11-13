@@ -17,7 +17,7 @@ namespace VitalSphere.Services.Database
 
         public bool IsActive { get; set; } = true;
 
-        public ICollection<ProductSubcategory> Subcategories { get; set; } = new List<ProductSubcategory>();
+        public ICollection<Product> Products { get; set; } = new List<Product>();
     }
 }
 

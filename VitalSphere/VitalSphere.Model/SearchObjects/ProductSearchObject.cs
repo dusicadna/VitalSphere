@@ -6,7 +6,6 @@ namespace VitalSphere.Model.SearchObjects
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }
         public bool? IsActive { get; set; }
-        public int? ProductSubcategoryId { get; set; }
         public int? ProductCategoryId { get; set; }
         public int? BrandId { get; set; }
     }

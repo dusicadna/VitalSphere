@@ -10,8 +10,6 @@ namespace VitalSphere.Model.Responses
         public byte[]? Picture { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
-        public int ProductSubcategoryId { get; set; }
-        public string ProductSubcategoryName { get; set; } = string.Empty;
         public int ProductCategoryId { get; set; }
         public string ProductCategoryName { get; set; } = string.Empty;
         public int BrandId { get; set; }

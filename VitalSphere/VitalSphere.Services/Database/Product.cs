@@ -19,8 +19,8 @@ namespace VitalSphere.Services.Database
         public bool IsActive { get; set; } = true;
 
         [Required]
-        public int ProductSubcategoryId { get; set; }
-        public ProductSubcategory ProductSubcategory { get; set; } = null!;
+        public int ProductCategoryId { get; set; }
+        public ProductCategory ProductCategory { get; set; } = null!;
 
         [Required]
         public int BrandId { get; set; }

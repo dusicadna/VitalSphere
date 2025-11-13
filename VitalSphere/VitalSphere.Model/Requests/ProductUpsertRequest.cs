@@ -17,7 +17,7 @@ namespace VitalSphere.Model.Requests
         public bool IsActive { get; set; } = true;
 
         [Required]
-        public int ProductSubcategoryId { get; set; }
+        public int ProductCategoryId { get; set; }
 
         [Required]
         public int BrandId { get; set; }
