@@ -16,6 +16,7 @@ namespace VitalSphere.Services.Database
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Product> Products { get; set; }
+        public DbSet<WellnessBox> WellnessBoxes { get; set; }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -87,6 +88,10 @@ namespace VitalSphere.Services.Database
                 .WithMany(sc => sc.Products)
                 .HasForeignKey(p => p.ProductSubcategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<WellnessBox>()
+                .HasIndex(w => w.Name)
+                .IsUnique();
 
             // Seed initial data
             modelBuilder.SeedData();
