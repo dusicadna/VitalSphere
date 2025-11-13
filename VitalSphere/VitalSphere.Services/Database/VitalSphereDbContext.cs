@@ -17,6 +17,7 @@ namespace VitalSphere.Services.Database
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<WellnessBox> WellnessBoxes { get; set; }
+        public DbSet<Gift> Gifts { get; set; }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -92,6 +93,21 @@ namespace VitalSphere.Services.Database
             modelBuilder.Entity<WellnessBox>()
                 .HasIndex(w => w.Name)
                 .IsUnique();
+
+            modelBuilder.Entity<Gift>()
+                .HasOne(g => g.User)
+                .WithMany(u => u.Gifts)
+                .HasForeignKey(g => g.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Gift>()
+                .HasOne(g => g.WellnessBox)
+                .WithMany(wb => wb.Gifts)
+                .HasForeignKey(g => g.WellnessBoxId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Gift>()
+                .HasIndex(g => new { g.UserId, g.WellnessBoxId, g.GiftedAt });
 
             // Seed initial data
             modelBuilder.SeedData();

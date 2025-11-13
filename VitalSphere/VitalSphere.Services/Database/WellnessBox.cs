@@ -23,6 +23,8 @@ namespace VitalSphere.Services.Database
         public bool IsActive { get; set; } = true;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public ICollection<Gift> Gifts { get; set; } = new List<Gift>();
     }
 }
 
