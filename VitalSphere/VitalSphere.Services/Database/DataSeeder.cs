@@ -14,7 +14,7 @@ namespace VitalSphere.Services.Database
         public static void SeedData(this ModelBuilder modelBuilder)
         {
             // Use a fixed date for all timestamps
-            var fixedDate = new DateTime(2025, 5, 5, 0, 0, 0, DateTimeKind.Utc);
+            var fixedDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
             // Seed Roles
             modelBuilder.Entity<Role>().HasData(
@@ -151,6 +151,163 @@ namespace VitalSphere.Services.Database
                 new City { Id = 29, Name = "Neum" },
                 new City { Id = 30, Name = "Široki Brijeg" }
             );
+
+
+            // Seed Wellness Service Categories
+            modelBuilder.Entity<WellnessServiceCategory>().HasData(
+    new WellnessServiceCategory 
+    { 
+        Id = 1, 
+        Name = "Body & Fitness", 
+        Description = "Focus on building strength, flexibility, and overall physical wellness through guided workouts, personalized training, and fitness programs designed for all levels.", 
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "wsc1.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    },
+    new WellnessServiceCategory 
+    { 
+        Id = 2, 
+        Name = "Massage & Relaxation", 
+        Description = "Restore balance and relieve tension with a variety of therapeutic massages and relaxation techniques aimed at reducing stress and revitalizing your body and mind.", 
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "wsc2.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    },
+    new WellnessServiceCategory 
+    { 
+        Id = 3, 
+        Name = "Mind & Balance", 
+        Description = "Achieve inner peace and mental clarity through yoga, meditation, and mindfulness practices designed to harmonize your body, mind, and spirit.", 
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "wsc3.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    },
+    new WellnessServiceCategory 
+    { 
+        Id = 4, 
+        Name = "Hydro & Thermal", 
+        Description = "Experience the soothing power of water and heat with our sauna, steam, and pool therapies that promote detoxification, relaxation, and rejuvenation.", 
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "wsc4.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    }
+        );
+
+
+// Seed Wellness Services
+modelBuilder.Entity<WellnessService>().HasData(
+    // 🧘‍♀️ Body & Fitness
+    new WellnessService 
+    { 
+        Id = 1, 
+        Name = "Personal Training", 
+        Description = "One-on-one customized fitness sessions focused on achieving your individual health and strength goals with professional guidance.", 
+        Price = 60,
+        DurationMinutes = 60,
+        WellnessServiceCategoryId = 1, 
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws1.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    },
+    new WellnessService 
+    { 
+        Id = 2, 
+        Name = "Pilates Class", 
+        Description = "Low-impact sessions that improve flexibility, posture, and core strength through controlled movement and breathing techniques.", 
+        Price = 50,
+        DurationMinutes = 60,
+        WellnessServiceCategoryId = 1, 
+            Image = ImageConversion.ConvertImageToByteArray("Assets", "ws2.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    },
+
+    // 🌿 Massage & Relaxation
+    new WellnessService 
+    { 
+        Id = 3, 
+        Name = "Aromatherapy Massage", 
+        Description = "A calming massage experience using essential oils to reduce stress, ease tension, and improve emotional well-being.", 
+        Price = 80,
+        DurationMinutes = 60,
+        WellnessServiceCategoryId = 2, 
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws3.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    },
+    new WellnessService 
+    { 
+        Id = 4, 
+        Name = "Deep Tissue Massage", 
+        Description = "Therapeutic massage focused on deeper layers of muscle and connective tissue to relieve chronic pain and stiffness.", 
+        Price = 100,
+        DurationMinutes = 60,
+        WellnessServiceCategoryId = 2, 
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws4.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    },
+
+    // 🧠 Mind & Balance
+    new WellnessService 
+    { 
+        Id = 5, 
+        Name = "Yoga Session", 
+        Description = "Guided yoga practice combining physical postures, breathing exercises, and mindfulness for total body and mind harmony.", 
+        Price = 50,
+        DurationMinutes = 60,
+        WellnessServiceCategoryId = 3, 
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws5.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    },
+    new WellnessService 
+    { 
+        Id = 6, 
+        Name = "Meditation Class", 
+        Description = "Calming guided meditation sessions to enhance focus, relieve stress, and promote emotional balance and awareness.", 
+        Price = 40,
+        DurationMinutes = 60,
+        WellnessServiceCategoryId = 3, 
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws6.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    },
+
+    // 💧 Hydro & Thermal
+    new WellnessService 
+    { 
+        Id = 7, 
+        Name = "Sauna Session", 
+        Description = "Relaxing heat therapy that promotes detoxification, muscle recovery, and improved circulation through dry or steam sauna environments.", 
+        Price = 30,
+        DurationMinutes = 90,
+        WellnessServiceCategoryId = 4, 
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws7.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    },
+    new WellnessService 
+    { 
+        Id = 8, 
+        Name = "Pool & Hydrotherapy", 
+        Description = "Invigorating pool-based relaxation and gentle water exercises that improve mobility, tone muscles, and calm the mind.", 
+        Price = 40,
+        DurationMinutes = 160,
+        WellnessServiceCategoryId = 4,   
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "ws8.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    }
+);
+
+
+
+
+
+
+
+
         }
     }
 } 
