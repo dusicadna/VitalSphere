@@ -19,6 +19,9 @@ namespace VitalSphere.Services.Services
 
         protected override IQueryable<Product> ApplyFilter(IQueryable<Product> query, ProductSearchObject search)
         {
+            query = query.Include(p => p.ProductSubcategory)
+                         .ThenInclude(sc => sc.ProductCategory);
+
             if (!string.IsNullOrEmpty(search.Name))
             {
                 query = query.Where(p => p.Name.Contains(search.Name));
@@ -39,7 +42,42 @@ namespace VitalSphere.Services.Services
                 query = query.Where(p => p.IsActive == search.IsActive.Value);
             }
 
+            if (search.ProductSubcategoryId.HasValue)
+            {
+                query = query.Where(p => p.ProductSubcategoryId == search.ProductSubcategoryId.Value);
+            }
+
+            if (search.ProductCategoryId.HasValue)
+            {
+                query = query.Where(p => p.ProductSubcategory.ProductCategoryId == search.ProductCategoryId.Value);
+            }
+
             return query;
+        }
+
+        public override async Task<ProductResponse?> GetByIdAsync(int id)
+        {
+            var entity = await _context.Products
+                .Include(p => p.ProductSubcategory)
+                .ThenInclude(sc => sc.ProductCategory)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (entity == null)
+            {
+                return null;
+            }
+
+            return MapToResponse(entity);
+        }
+
+        protected override ProductResponse MapToResponse(Product entity)
+        {
+            var response = base.MapToResponse(entity);
+            response.ProductSubcategoryId = entity.ProductSubcategoryId;
+            response.ProductSubcategoryName = entity.ProductSubcategory?.Name ?? string.Empty;
+            response.ProductCategoryId = entity.ProductSubcategory?.ProductCategoryId ?? 0;
+            response.ProductCategoryName = entity.ProductSubcategory?.ProductCategory?.Name ?? string.Empty;
+            return response;
         }
 
         protected override async Task BeforeInsert(Product entity, ProductUpsertRequest request)
@@ -48,6 +86,11 @@ namespace VitalSphere.Services.Services
             {
                 throw new InvalidOperationException("A product with this name already exists.");
             }
+
+            if (!await _context.ProductSubcategories.AnyAsync(sc => sc.Id == request.ProductSubcategoryId))
+            {
+                throw new InvalidOperationException("The specified product subcategory does not exist.");
+            }
         }
 
         protected override async Task BeforeUpdate(Product entity, ProductUpsertRequest request)
@@ -55,6 +98,11 @@ namespace VitalSphere.Services.Services
             if (await _context.Products.AnyAsync(p => p.Name == request.Name && p.Id != entity.Id))
             {
                 throw new InvalidOperationException("A product with this name already exists.");
+            }
+
+            if (!await _context.ProductSubcategories.AnyAsync(sc => sc.Id == request.ProductSubcategoryId))
+            {
+                throw new InvalidOperationException("The specified product subcategory does not exist.");
             }
         }
     }

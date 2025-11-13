@@ -8,6 +8,9 @@ namespace VitalSphere.Services.Database
         {
         }
 
+        public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<ProductSubcategory> ProductSubcategories { get; set; }
+
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
@@ -24,19 +27,6 @@ namespace VitalSphere.Services.Database
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configure User entity
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Email)
-                .IsUnique();
-
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Username)
-                .IsUnique();
-
-            // Configure Role entity
-            modelBuilder.Entity<Role>()
-                .HasIndex(r => r.Name)
-                .IsUnique();
 
             // Configure UserRole join entity
             modelBuilder.Entity<UserRole>()
@@ -77,6 +67,26 @@ namespace VitalSphere.Services.Database
                 .WithMany()
                 .HasForeignKey(u => u.CityId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<ProductCategory>()
+                .HasIndex(c => c.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<ProductSubcategory>()
+                .HasIndex(sc => sc.Name)
+                .IsUnique();
+
+            modelBuilder.Entity<ProductSubcategory>()
+                .HasOne(sc => sc.ProductCategory)
+                .WithMany(c => c.Subcategories)
+                .HasForeignKey(sc => sc.ProductCategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.ProductSubcategory)
+                .WithMany(sc => sc.Products)
+                .HasForeignKey(p => p.ProductSubcategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Seed initial data
             modelBuilder.SeedData();

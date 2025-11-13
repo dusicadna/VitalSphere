@@ -151,6 +151,86 @@ namespace VitalSphere.Services.Database
                 new City { Id = 29, Name = "Neum" },
                 new City { Id = 30, Name = "Široki Brijeg" }
             );
+
+            // Seed Product Categories
+            modelBuilder.Entity<ProductCategory>().HasData(
+                new ProductCategory
+                {
+                    Id = 1,
+                    Name = "Vehicles",
+                    Description = "Vehicle related products",
+                    IsActive = true
+                },
+                new ProductCategory
+                {
+                    Id = 2,
+                    Name = "Accessories",
+                    Description = "Vehicle accessories and add-ons",
+                    IsActive = true
+                }
+            );
+
+            // Seed Product Subcategories
+            modelBuilder.Entity<ProductSubcategory>().HasData(
+                new ProductSubcategory
+                {
+                    Id = 1,
+                    Name = "Cars",
+                    Description = "Passenger cars",
+                    ProductCategoryId = 1,
+                    IsActive = true
+                },
+                new ProductSubcategory
+                {
+                    Id = 2,
+                    Name = "Motorcycles",
+                    Description = "Two-wheeled vehicles",
+                    ProductCategoryId = 1,
+                    IsActive = true
+                },
+                new ProductSubcategory
+                {
+                    Id = 3,
+                    Name = "Interior Accessories",
+                    Description = "Interior add-ons and gadgets",
+                    ProductCategoryId = 2,
+                    IsActive = true
+                }
+            );
+
+            // Seed Products
+            modelBuilder.Entity<Product>().HasData(
+                new Product
+                {
+                    Id = 1,
+                    Name = "Tesla Model S",
+                    Price = 79999.99m,
+                    Picture = null,
+                    IsActive = true,
+                    ProductSubcategoryId = 1,
+                    CreatedAt = fixedDate
+                },
+                new Product
+                {
+                    Id = 2,
+                    Name = "Yamaha MT-07",
+                    Price = 7499.50m,
+                    Picture = null,
+                    IsActive = true,
+                    ProductSubcategoryId = 2,
+                    CreatedAt = fixedDate
+                },
+                new Product
+                {
+                    Id = 3,
+                    Name = "Leather Seat Covers",
+                    Price = 199.99m,
+                    Picture = null,
+                    IsActive = true,
+                    ProductSubcategoryId = 3,
+                    CreatedAt = fixedDate
+                }
+            );
         }
     }
 } 

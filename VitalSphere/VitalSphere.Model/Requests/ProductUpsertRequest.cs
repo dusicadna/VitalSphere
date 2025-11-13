@@ -15,5 +15,8 @@ namespace VitalSphere.Model.Requests
         public byte[]? Picture { get; set; }
         
         public bool IsActive { get; set; } = true;
+
+        [Required]
+        public int ProductSubcategoryId { get; set; }
     }
 }
