@@ -1,0 +1,7 @@
+# MIGRATION COMMAND
+
+dotnet ef migrations add Init --project .\VitalSphere.Services --startup-project .\VitalSphere.WebAPI
+
+# .G CLASSES FLUTTER
+
+dart run build_runner build
