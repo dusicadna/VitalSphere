@@ -1,7 +1,12 @@
 using System;
 
-namespace VitalSphere.Subscriber.Models
+namespace VitalSphere.Model.Messages
 {
+    public class AppointmentNotification
+    {
+        public AppointmentNotificationDto Appointment { get; set; } = new AppointmentNotificationDto();
+    }
+
     public class AppointmentNotificationDto
     {
         public string UserEmail { get; set; } = string.Empty;

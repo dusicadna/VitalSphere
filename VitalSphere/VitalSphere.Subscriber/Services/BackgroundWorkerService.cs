@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Runtime.Versioning;
 using System.Linq;
-using VitalSphere.Subscriber.Models;
+using VitalSphere.Model.Messages;
 using VitalSphere.Subscriber.Interfaces;
 using System.Net.Sockets;
 using System.Net;

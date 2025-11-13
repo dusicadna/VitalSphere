@@ -12,7 +12,7 @@ using VitalSphere.Services.Database;
 namespace VitalSphere.Services.Migrations
 {
     [DbContext(typeof(VitalSphereDbContext))]
-    [Migration("20251113145238_Init")]
+    [Migration("20251113150849_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -677,7 +677,7 @@ namespace VitalSphere.Services.Migrations
                             Id = 2,
                             CityId = 5,
                             CreatedAt = new DateTime(2025, 5, 5, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Email = "vedad.ribery@gmail.com",
+                            Email = "cinevibe.reciever@gmail.com",
                             FirstName = "Adna",
                             GenderId = 1,
                             IsActive = true,

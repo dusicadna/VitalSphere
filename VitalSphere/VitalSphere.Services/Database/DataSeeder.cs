@@ -59,7 +59,7 @@ namespace VitalSphere.Services.Database
                     Id = 2, 
                     FirstName = "Adna", 
                     LastName = "Dušić",
-                    Email = "vedad.ribery@gmail.com",
+                    Email = "cinevibe.reciever@gmail.com",
                     Username = "user", 
                     PasswordHash = "kDPVcZaikiII7vXJbMEw6B0xZ245I29ocaxBjLaoAC0=", 
                     PasswordSalt = "O5R9WmM6IPCCMci/BCG/eg==", 

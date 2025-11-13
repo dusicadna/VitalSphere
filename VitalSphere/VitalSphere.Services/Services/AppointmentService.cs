@@ -1,6 +1,7 @@
 using EasyNetQ;
 using VitalSphere.Model.Requests;
 using VitalSphere.Model.Responses;
+using VitalSphere.Model.Messages;
 using VitalSphere.Model.SearchObjects;
 using VitalSphere.Services.Database;
 using VitalSphere.Services.Interfaces;
@@ -141,21 +142,6 @@ namespace VitalSphere.Services.Services
             {
                 Console.WriteLine($"Failed to send appointment notification: {ex.Message}");
             }
-        }
-
-        private class AppointmentNotification
-        {
-            public AppointmentNotificationDto Appointment { get; set; } = new AppointmentNotificationDto();
-        }
-
-        private class AppointmentNotificationDto
-        {
-            public string UserEmail { get; set; } = string.Empty;
-            public string UserFullName { get; set; } = string.Empty;
-            public string WellnessServiceName { get; set; } = string.Empty;
-            public string WellnessServiceCategoryName { get; set; } = string.Empty;
-            public DateTime ScheduledAt { get; set; }
-            public string? Notes { get; set; }
         }
     }
 }
