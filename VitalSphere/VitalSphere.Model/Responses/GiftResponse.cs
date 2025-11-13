@@ -10,6 +10,8 @@ namespace VitalSphere.Model.Responses
         public int WellnessBoxId { get; set; }
         public string WellnessBoxName { get; set; } = string.Empty;
         public DateTime GiftedAt { get; set; }
+        public int GiftStatusId { get; set; }
+        public string GiftStatusName { get; set; } = string.Empty;
     }
 }
 

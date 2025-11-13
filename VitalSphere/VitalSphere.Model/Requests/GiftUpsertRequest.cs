@@ -12,6 +12,8 @@ namespace VitalSphere.Model.Requests
         public int WellnessBoxId { get; set; }
 
         public DateTime? GiftedAt { get; set; }
+
+        public int? GiftStatusId { get; set; }
     }
 }
 

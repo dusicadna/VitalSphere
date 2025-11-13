@@ -13,6 +13,9 @@ namespace VitalSphere.Services.Services
 {
     public class GiftService : BaseCRUDService<GiftResponse, GiftSearchObject, Gift, GiftUpsertRequest, GiftUpsertRequest>, IGiftService
     {
+        private const int EarnedStatusId = 1;
+        private const int PickedUpStatusId = 2;
+
         public GiftService(VitalSphereDbContext context, IMapper mapper) : base(context, mapper)
         {
         }
@@ -20,7 +23,8 @@ namespace VitalSphere.Services.Services
         protected override IQueryable<Gift> ApplyFilter(IQueryable<Gift> query, GiftSearchObject search)
         {
             query = query.Include(g => g.User)
-                         .Include(g => g.WellnessBox);
+                         .Include(g => g.WellnessBox)
+                         .Include(g => g.GiftStatus);
 
             if (search.UserId.HasValue)
             {
@@ -32,6 +36,11 @@ namespace VitalSphere.Services.Services
                 query = query.Where(g => g.WellnessBoxId == search.WellnessBoxId.Value);
             }
 
+            if (search.GiftStatusId.HasValue)
+            {
+                query = query.Where(g => g.GiftStatusId == search.GiftStatusId.Value);
+            }
+
             return query;
         }
 
@@ -40,6 +49,7 @@ namespace VitalSphere.Services.Services
             var entity = await _context.Gifts
                 .Include(g => g.User)
                 .Include(g => g.WellnessBox)
+                .Include(g => g.GiftStatus)
                 .FirstOrDefaultAsync(g => g.Id == id);
 
             if (entity == null)
@@ -59,7 +69,9 @@ namespace VitalSphere.Services.Services
                 UserName = $"{entity.User?.FirstName} {entity.User?.LastName}".Trim(),
                 WellnessBoxId = entity.WellnessBoxId,
                 WellnessBoxName = entity.WellnessBox?.Name ?? string.Empty,
-                GiftedAt = entity.GiftedAt
+                GiftedAt = entity.GiftedAt,
+                GiftStatusId = entity.GiftStatusId,
+                GiftStatusName = entity.GiftStatus?.Name ?? string.Empty
             };
         }
 
@@ -75,6 +87,16 @@ namespace VitalSphere.Services.Services
                 throw new InvalidOperationException("The specified wellness box does not exist.");
             }
 
+            var statusId = request.GiftStatusId ?? EarnedStatusId;
+            var status = await _context.GiftStatuses.FindAsync(statusId);
+
+            if (status == null)
+            {
+                throw new InvalidOperationException("The specified gift status does not exist.");
+            }
+
+            entity.GiftStatusId = statusId;
+            entity.GiftStatus = status;
             entity.GiftedAt = request.GiftedAt ?? DateTime.UtcNow;
         }
 
@@ -90,7 +112,55 @@ namespace VitalSphere.Services.Services
                 throw new InvalidOperationException("The specified wellness box does not exist.");
             }
 
+            if (request.GiftStatusId.HasValue)
+            {
+                var statusId = request.GiftStatusId.Value;
+
+                var status = await _context.GiftStatuses.FindAsync(statusId);
+
+                if (status == null)
+                {
+                    throw new InvalidOperationException("The specified gift status does not exist.");
+                }
+
+                entity.GiftStatusId = statusId;
+                entity.GiftStatus = status;
+            }
+
             entity.GiftedAt = request.GiftedAt ?? entity.GiftedAt;
+        }
+
+        public async Task<GiftResponse?> MarkAsPickedUpAsync(int id)
+        {
+            var entity = await _context.Gifts
+                .Include(g => g.User)
+                .Include(g => g.WellnessBox)
+                .Include(g => g.GiftStatus)
+                .FirstOrDefaultAsync(g => g.Id == id);
+
+            if (entity == null)
+            {
+                return null;
+            }
+
+            if (entity.GiftStatusId == PickedUpStatusId)
+            {
+                return MapToResponse(entity);
+            }
+
+            var pickedUpStatus = await _context.GiftStatuses.FindAsync(PickedUpStatusId);
+
+            if (pickedUpStatus == null)
+            {
+                throw new InvalidOperationException("Picked up gift status is not configured.");
+            }
+
+            entity.GiftStatusId = PickedUpStatusId;
+            entity.GiftStatus = pickedUpStatus;
+
+            await _context.SaveChangesAsync();
+
+            return MapToResponse(entity);
         }
     }
 }

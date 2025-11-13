@@ -4,6 +4,7 @@ namespace VitalSphere.Model.SearchObjects
     {
         public int? UserId { get; set; }
         public int? WellnessBoxId { get; set; }
+        public int? GiftStatusId { get; set; }
     }
 }
 

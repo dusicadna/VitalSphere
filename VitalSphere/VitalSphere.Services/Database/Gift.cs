@@ -17,6 +17,10 @@ namespace VitalSphere.Services.Database
         public int WellnessBoxId { get; set; }
         public WellnessBox WellnessBox { get; set; } = null!;
 
+        [ForeignKey(nameof(GiftStatus))]
+        public int GiftStatusId { get; set; }
+        public GiftStatus GiftStatus { get; set; } = null!;
+
         public DateTime GiftedAt { get; set; } = DateTime.UtcNow;
     }
 }

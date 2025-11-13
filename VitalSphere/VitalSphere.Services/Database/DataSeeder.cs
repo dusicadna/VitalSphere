@@ -461,7 +461,125 @@ namespace VitalSphere.Services.Database
                 }
             );
 
+            // Seed Appointments
+            modelBuilder.Entity<Appointment>().HasData(
+                new Appointment
+                {
+                    Id = 1,
+                    UserId = 2, // Adna
+                    WellnessServiceId = 3, // Aromatherapy Massage
+                    ScheduledAt = fixedDate.AddDays(-60).AddHours(10),
+                    Notes = "Relaxation session after a busy week.",
+                    CreatedAt = fixedDate.AddDays(-20)
+                },
+                new Appointment
+                {
+                    Id = 2,
+                    UserId = 2, // Adna
+                    WellnessServiceId = 5, // Yoga Session
+                    ScheduledAt = fixedDate.AddDays(-70).AddHours(8),
+                    Notes = "Morning session to improve flexibility.",
+                    CreatedAt = fixedDate.AddDays(-10)
+                },
+                new Appointment
+                {
+                    Id = 3,
+                    UserId = 2, // Adna
+                    WellnessServiceId = 2, // Pilates Class
+                    ScheduledAt = fixedDate.AddDays(30).AddHours(9),
+                    Notes = "Upcoming pilates class to maintain progress.",
+                    CreatedAt = fixedDate
+                }
+            );
 
-        }
+            // Seed Reviews for Adna's past appointments
+            modelBuilder.Entity<Review>().HasData(
+                new Review
+                {
+                    Id = 1,
+                    UserId = 2, // Adna
+                    AppointmentId = 1,
+                    Rating = 5,
+                    Comment = "Absolutely loved the aromatherapy massage! Felt rejuvenated.",
+                    CreatedAt = fixedDate.AddDays(-70)
+                },
+                new Review
+                {
+                    Id = 2,
+                    UserId = 2, // Adna
+                    AppointmentId = 2,
+                    Rating = 4,
+                    Comment = "Great yoga session with helpful guidance throughout.",
+                    CreatedAt = fixedDate.AddDays(-60)
+                }
+            );
+
+            // Seed Order for Adna
+            modelBuilder.Entity<Order>().HasData(
+                new Order
+                {
+                    Id = 1,
+                    UserId = 2, // Adna
+                    TotalAmount = 35m,
+                    CreatedAt = fixedDate,
+                    IsActive = true
+                }
+            );
+
+            // Seed Order Items for Adna's order
+            modelBuilder.Entity<OrderItem>().HasData(
+                new OrderItem
+                {
+                    Id = 1,
+                    OrderId = 1,
+                    ProductId = 1, // Serenity Soy Candle
+                    Quantity = 2,
+                    UnitPrice = 5m,
+                    TotalPrice = 10m,
+                    CreatedAt = fixedDate
+                },
+                new OrderItem
+                {
+                    Id = 2,
+                    OrderId = 1,
+                    ProductId = 4, // Deep Hydration Face Mask
+                    Quantity = 1,
+                    UnitPrice = 25m,
+                    TotalPrice = 25m,
+                    CreatedAt = fixedDate
+                }
+            );
+
+            // Seed Gift Statuses
+            modelBuilder.Entity<GiftStatus>().HasData(
+                new GiftStatus
+                {
+                    Id = 1,
+                    Name = "Earned",
+                    Description = "Gift earned by the user."
+                },
+                new GiftStatus
+                {
+                    Id = 2,
+                    Name = "Picked Up",
+                    Description = "Gift collected at the wellness center."
+                }
+            );
+
+            // Seed Gifts for Adna
+            modelBuilder.Entity<Gift>().HasData(
+                new Gift
+                {
+                    Id = 1,
+                    UserId = 2, // Adna
+                    WellnessBoxId = 1,
+                    GiftStatusId = 2,
+                    GiftedAt = fixedDate.AddDays(-20)
+                    
+                }
+            );
+
+         
+    }
     }
 }
