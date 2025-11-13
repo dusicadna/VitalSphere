@@ -20,7 +20,8 @@ namespace VitalSphere.Services.Services
         protected override IQueryable<Product> ApplyFilter(IQueryable<Product> query, ProductSearchObject search)
         {
             query = query.Include(p => p.ProductSubcategory)
-                         .ThenInclude(sc => sc.ProductCategory);
+                         .ThenInclude(sc => sc.ProductCategory)
+                         .Include(p => p.Brand);
 
             if (!string.IsNullOrEmpty(search.Name))
             {
@@ -52,6 +53,11 @@ namespace VitalSphere.Services.Services
                 query = query.Where(p => p.ProductSubcategory.ProductCategoryId == search.ProductCategoryId.Value);
             }
 
+            if (search.BrandId.HasValue)
+            {
+                query = query.Where(p => p.BrandId == search.BrandId.Value);
+            }
+
             return query;
         }
 
@@ -60,6 +66,7 @@ namespace VitalSphere.Services.Services
             var entity = await _context.Products
                 .Include(p => p.ProductSubcategory)
                 .ThenInclude(sc => sc.ProductCategory)
+                .Include(p => p.Brand)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
             if (entity == null)
@@ -77,6 +84,8 @@ namespace VitalSphere.Services.Services
             response.ProductSubcategoryName = entity.ProductSubcategory?.Name ?? string.Empty;
             response.ProductCategoryId = entity.ProductSubcategory?.ProductCategoryId ?? 0;
             response.ProductCategoryName = entity.ProductSubcategory?.ProductCategory?.Name ?? string.Empty;
+            response.BrandId = entity.BrandId;
+            response.BrandName = entity.Brand?.Name ?? string.Empty;
             return response;
         }
 
@@ -91,6 +100,11 @@ namespace VitalSphere.Services.Services
             {
                 throw new InvalidOperationException("The specified product subcategory does not exist.");
             }
+
+            if (!await _context.Brands.AnyAsync(b => b.Id == request.BrandId))
+            {
+                throw new InvalidOperationException("The specified brand does not exist.");
+            }
         }
 
         protected override async Task BeforeUpdate(Product entity, ProductUpsertRequest request)
@@ -103,6 +117,11 @@ namespace VitalSphere.Services.Services
             if (!await _context.ProductSubcategories.AnyAsync(sc => sc.Id == request.ProductSubcategoryId))
             {
                 throw new InvalidOperationException("The specified product subcategory does not exist.");
+            }
+
+            if (!await _context.Brands.AnyAsync(b => b.Id == request.BrandId))
+            {
+                throw new InvalidOperationException("The specified brand does not exist.");
             }
         }
     }

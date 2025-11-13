@@ -10,6 +10,7 @@ namespace VitalSphere.Services.Database
 
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<ProductSubcategory> ProductSubcategories { get; set; }
+        public DbSet<Brand> Brands { get; set; }
 
         public DbSet<Cart> Carts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
@@ -78,6 +79,10 @@ namespace VitalSphere.Services.Database
                 .HasIndex(sc => sc.Name)
                 .IsUnique();
 
+            modelBuilder.Entity<Brand>()
+                .HasIndex(b => b.Name)
+                .IsUnique();
+
             modelBuilder.Entity<ProductSubcategory>()
                 .HasOne(sc => sc.ProductCategory)
                 .WithMany(c => c.Subcategories)
@@ -88,6 +93,12 @@ namespace VitalSphere.Services.Database
                 .HasOne(p => p.ProductSubcategory)
                 .WithMany(sc => sc.Products)
                 .HasForeignKey(p => p.ProductSubcategoryId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Product>()
+                .HasOne(p => p.Brand)
+                .WithMany(b => b.Products)
+                .HasForeignKey(p => p.BrandId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<WellnessBox>()

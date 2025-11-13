@@ -22,6 +22,10 @@ namespace VitalSphere.Services.Database
         public int ProductSubcategoryId { get; set; }
         public ProductSubcategory ProductSubcategory { get; set; } = null!;
 
+        [Required]
+        public int BrandId { get; set; }
+        public Brand Brand { get; set; } = null!;
+
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

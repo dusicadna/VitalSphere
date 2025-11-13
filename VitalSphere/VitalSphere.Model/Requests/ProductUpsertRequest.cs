@@ -18,5 +18,8 @@ namespace VitalSphere.Model.Requests
 
         [Required]
         public int ProductSubcategoryId { get; set; }
+
+        [Required]
+        public int BrandId { get; set; }
     }
 }

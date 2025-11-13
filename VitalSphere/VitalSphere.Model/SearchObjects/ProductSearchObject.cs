@@ -8,5 +8,6 @@ namespace VitalSphere.Model.SearchObjects
         public bool? IsActive { get; set; }
         public int? ProductSubcategoryId { get; set; }
         public int? ProductCategoryId { get; set; }
+        public int? BrandId { get; set; }
     }
 }
