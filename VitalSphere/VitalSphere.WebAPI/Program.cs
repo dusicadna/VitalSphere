@@ -27,6 +27,8 @@ builder.Services.AddTransient<IProductCategoryService, ProductCategoryService>()
 builder.Services.AddTransient<IWellnessBoxService, WellnessBoxService>();
 builder.Services.AddTransient<IGiftService, GiftService>();
 builder.Services.AddTransient<IBrandService, BrandService>();
+builder.Services.AddTransient<IWellnessServiceCategoryService, WellnessServiceCategoryService>();
+builder.Services.AddTransient<IWellnessServiceService, WellnessServiceService>();
 
 // Configure database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=.;Database=VitalSphereDb;User Id=sa;Password=QWEasd123!;TrustServerCertificate=True;Trusted_Connection=True;";
