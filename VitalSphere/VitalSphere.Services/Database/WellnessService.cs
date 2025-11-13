@@ -34,6 +34,8 @@ namespace VitalSphere.Services.Database
         [Required]
         public int WellnessServiceCategoryId { get; set; }
         public WellnessServiceCategory WellnessServiceCategory { get; set; } = null!;
+
+        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }
 }
 

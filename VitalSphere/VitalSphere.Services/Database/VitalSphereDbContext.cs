@@ -20,6 +20,7 @@ namespace VitalSphere.Services.Database
         public DbSet<Product> Products { get; set; }
         public DbSet<WellnessBox> WellnessBoxes { get; set; }
         public DbSet<Gift> Gifts { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -101,6 +102,21 @@ namespace VitalSphere.Services.Database
                 .WithMany(c => c.WellnessServices)
                 .HasForeignKey(ws => ws.WellnessServiceCategoryId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Appointment>()
+                .HasOne(a => a.User)
+                .WithMany(u => u.Appointments)
+                .HasForeignKey(a => a.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Appointment>()
+                .HasOne(a => a.WellnessService)
+                .WithMany(ws => ws.Appointments)
+                .HasForeignKey(a => a.WellnessServiceId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Appointment>()
+                .HasIndex(a => new { a.UserId, a.WellnessServiceId, a.ScheduledAt });
 
             modelBuilder.Entity<WellnessBox>()
                 .HasIndex(w => w.Name)

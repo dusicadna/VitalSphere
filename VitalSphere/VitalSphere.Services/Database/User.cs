@@ -54,5 +54,6 @@ namespace VitalSphere.Services.Database
         public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 
         public ICollection<Gift> Gifts { get; set; } = new List<Gift>();
+        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }
 } 
