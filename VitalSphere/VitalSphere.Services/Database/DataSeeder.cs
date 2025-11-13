@@ -302,6 +302,50 @@ modelBuilder.Entity<WellnessService>().HasData(
 );
 
 
+         // Seed Wellness Boxes
+modelBuilder.Entity<WellnessBox>().HasData(
+    new WellnessBox
+    {
+        Id = 1,
+        Name = "Welcome Wellness Box",
+        Description = "A special starter kit given to all new clients when they schedule their first wellness service — a gentle introduction to relaxation and self-care.",
+        IncludedItems = "Herbal tea blend, Relaxation eye mask, Mini essential oil (lavender), Welcome card with wellness tips",
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "wb1.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    },
+    new WellnessBox
+    {
+        Id = 2,
+        Name = "Relax & Restore Box",
+        Description = "A soothing box designed to help you unwind and recover after your massage or sauna session.",
+        IncludedItems = "Scented candle, Bath salts, Body lotion, Herbal relaxation pillow",
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "wb2.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    },
+    new WellnessBox
+    {
+        Id = 3,
+        Name = "Active Body Box",
+        Description = "An energizing set for fitness lovers — perfect for recovery and motivation after active sessions.",
+        IncludedItems = "Protein snack, Resistance band, Cooling towel, Mini muscle balm",
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "wb3.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    },
+    new WellnessBox
+    {
+        Id = 4,
+        Name = "Mind & Balance Box",
+        Description = "A calming box that encourages mindfulness and balance through reflection and relaxation.",
+        IncludedItems = "Gratitude journal, Meditation candle, Incense sticks, Affirmation cards",
+        Image = ImageConversion.ConvertImageToByteArray("Assets", "wb4.png"),
+        CreatedAt = fixedDate,
+        IsActive = true
+    }
+);
+
 
 
 
