@@ -13,11 +13,16 @@ using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IRoleService, RoleService>();
 builder.Services.AddTransient<IGenderService, GenderService>();
 builder.Services.AddTransient<ICityService, CityService>();
-
+builder.Services.AddTransient<ICartService, CartService>();
+builder.Services.AddTransient<ICartItemService, CartItemService>();
+builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IOrderItemService, OrderItemService>();
+builder.Services.AddTransient<IProductService, ProductService>();
 
 // Configure database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=.;Database=VitalSphereDb;User Id=sa;Password=QWEasd123!;TrustServerCertificate=True;Trusted_Connection=True;";
