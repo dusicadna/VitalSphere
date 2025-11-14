@@ -360,44 +360,71 @@ class _MasterScreenState extends State<MasterScreen>
   }
 
   Widget _buildFocusedNav(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _modernDrawerTile(
-            context,
-            icon: Icons.rate_review_outlined,
-            activeIcon: Icons.rate_review,
-            label: 'Reviews',
-            screen: ReviewListScreen(),
-          ),
-          const SizedBox(height: 16),
-          _modernDrawerTile(
-            context,
-            icon: Icons.location_city_outlined,
-            activeIcon: Icons.location_city_rounded,
-            label: 'Cities',
-            screen: CityListScreen(),
-          ),
-          const SizedBox(height: 16),
-          _modernDrawerTile(
-            context,
-            icon: Icons.people_outlined,
-            activeIcon: Icons.people_rounded,
-            label: 'Users',
-            screen: const UsersListScreen(),
-          ),
-          const SizedBox(height: 16),
-          _modernDrawerTile(
-            context,
-            icon: Icons.category_outlined,
-            activeIcon: Icons.category_rounded,
-            label: 'Product Categories',
-            screen: const ProductCategoryListScreen(),
-          ),
-          const Spacer(),
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Product Section
+            _buildSectionHeader('Product Section'),
+            const SizedBox(height: 8),
+            _modernDrawerTile(
+              context,
+              icon: Icons.category_outlined,
+              activeIcon: Icons.category_rounded,
+              label: 'Product Categories',
+              screen: const ProductCategoryListScreen(),
+            ),
+            const SizedBox(height: 24),
+            
+            // User Section
+            _buildSectionHeader('User Section'),
+            const SizedBox(height: 8),
+            _modernDrawerTile(
+              context,
+              icon: Icons.people_outlined,
+              activeIcon: Icons.people_rounded,
+              label: 'Users',
+              screen: const UsersListScreen(),
+            ),
+            const SizedBox(height: 24),
+            
+            // Reviews tile (no section header)
+            _modernDrawerTile(
+              context,
+              icon: Icons.rate_review_outlined,
+              activeIcon: Icons.rate_review,
+              label: 'Reviews',
+              screen: ReviewListScreen(),
+            ),
+            const SizedBox(height: 16),
+            
+            // Cities tile (no section header)
+            _modernDrawerTile(
+              context,
+              icon: Icons.location_city_outlined,
+              activeIcon: Icons.location_city_rounded,
+              label: 'Cities',
+              screen: CityListScreen(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      child: Text(
+        title.toUpperCase(),
+        style: TextStyle(
+          color: Colors.white.withOpacity(0.6),
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1.2,
+        ),
       ),
     );
   }
