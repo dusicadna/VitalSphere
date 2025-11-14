@@ -59,7 +59,7 @@ namespace VitalSphere.Services.Database
                     Id = 2,
                     FirstName = "Adna",
                     LastName = "Dušić",
-                    Email = "cinevibe.reciever@gmail.com",
+                    Email = "vitalsphere.receiver@gmail.com",
                     Username = "user",
                     PasswordHash = "kDPVcZaikiII7vXJbMEw6B0xZ245I29ocaxBjLaoAC0=",
                     PasswordSalt = "O5R9WmM6IPCCMci/BCG/eg==",
@@ -68,7 +68,7 @@ namespace VitalSphere.Services.Database
                     PhoneNumber = DefaultPhoneNumber,
                     GenderId = 1, // Male
                     CityId = 5, // Mostar
-                    //Picture = ImageConversion.ConvertImageToByteArray("Assets", "amel.png")
+                    Picture = ImageConversion.ConvertImageToByteArray("Assets", "adna.png")
                 },
                 new User
                 {

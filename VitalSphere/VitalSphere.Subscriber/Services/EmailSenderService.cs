@@ -6,8 +6,8 @@ namespace VitalSphere.Subscriber.Services
 {
     public class EmailSenderService : IEmailSenderService
     {
-        private readonly string _gmailMail = "cinevibe.sender@gmail.com";
-        private readonly string _gmailPass = "spwq noqc ypqe hwai";
+        private readonly string _gmailMail = "vitalsphere.sender@gmail.com";
+        private readonly string _gmailPass = "jwbi vldo zlyc eptm";
 
         public Task SendEmailAsync(string email, string subject, string message)
         {
