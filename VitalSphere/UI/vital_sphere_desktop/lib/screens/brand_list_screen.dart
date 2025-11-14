@@ -1,0 +1,300 @@
+import 'package:flutter/material.dart';
+import 'package:vital_sphere_desktop/layouts/master_screen.dart';
+import 'package:vital_sphere_desktop/model/brand.dart';
+import 'package:vital_sphere_desktop/model/search_result.dart';
+import 'package:vital_sphere_desktop/providers/brand_provider.dart';
+import 'package:vital_sphere_desktop/screens/brand_details_screen.dart';
+import 'package:vital_sphere_desktop/screens/brand_edit_screen.dart';
+import 'package:vital_sphere_desktop/utils/base_table.dart';
+import 'package:vital_sphere_desktop/utils/base_pagination.dart';
+import 'package:vital_sphere_desktop/utils/base_textfield.dart';
+import 'package:provider/provider.dart';
+
+class BrandListScreen extends StatefulWidget {
+  const BrandListScreen({super.key});
+
+  @override
+  State<BrandListScreen> createState() => _BrandListScreenState();
+}
+
+class _BrandListScreenState extends State<BrandListScreen> {
+  late BrandProvider brandProvider;
+  TextEditingController nameController = TextEditingController();
+  bool? selectedIsActive;
+
+  SearchResult<Brand>? brands;
+  int _currentPage = 0;
+  int _pageSize = 5;
+  final List<int> _pageSizeOptions = [5, 7, 10, 20, 50];
+
+  Future<void> _performSearch({int? page, int? pageSize}) async {
+    final int pageToFetch = page ?? _currentPage;
+    final int pageSizeToUse = pageSize ?? _pageSize;
+    final filter = {
+      if (nameController.text.isNotEmpty) 'name': nameController.text,
+      if (selectedIsActive != null) 'isActive': selectedIsActive,
+      'page': pageToFetch,
+      'pageSize': pageSizeToUse,
+      'includeTotalCount': true,
+    };
+    debugPrint(filter.toString());
+    var brandsResult = await brandProvider.get(filter: filter);
+    debugPrint(brandsResult.items?.firstOrNull?.name);
+    setState(() {
+      this.brands = brandsResult;
+      _currentPage = pageToFetch;
+      _pageSize = pageSizeToUse;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      brandProvider = context.read<BrandProvider>();
+
+      await _performSearch(page: 0);
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MasterScreen(
+      title: "Brands Management",
+      child: Center(
+        child: Column(
+          children: [
+            _buildSearch(),
+            Expanded(child: _buildResultView()),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearch() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              decoration: customTextFieldDecoration(
+                "Name",
+                prefixIcon: Icons.search,
+              ),
+              controller: nameController,
+              onSubmitted: (value) => _performSearch(),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: DropdownButtonFormField<bool?>(
+              decoration: customTextFieldDecoration(
+                'Status',
+                prefixIcon: Icons.toggle_on,
+              ),
+              value: selectedIsActive,
+              items: const [
+                DropdownMenuItem<bool?>(value: null, child: Text('All')),
+                DropdownMenuItem<bool>(value: true, child: Text('Active')),
+                DropdownMenuItem<bool>(value: false, child: Text('Inactive')),
+              ],
+              onChanged: (bool? newValue) {
+                setState(() {
+                  selectedIsActive = newValue;
+                });
+                _performSearch(page: 0);
+              },
+            ),
+          ),
+          const SizedBox(width: 10),
+          ElevatedButton(
+            onPressed: _performSearch,
+            child: const Text("Search"),
+          ),
+          const SizedBox(width: 10),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const BrandEditScreen(),
+                  settings: const RouteSettings(name: 'BrandEditScreen'),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF2F855A),
+              foregroundColor: Colors.white,
+            ),
+            child: const Row(
+              children: [Icon(Icons.add), Text('Add Brand')],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildResultView() {
+    final isEmpty =
+        brands == null || brands!.items == null || brands!.items!.isEmpty;
+    final int totalCount = brands?.totalCount ?? 0;
+    final int totalPages = (totalCount / _pageSize).ceil();
+    final bool isFirstPage = _currentPage == 0;
+    final bool isLastPage =
+        _currentPage >= totalPages - 1 || totalPages == 0;
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          BaseTable(
+            icon: Icons.branding_watermark_outlined,
+            title: "Brands",
+            width: 700,
+            height: 423,
+            columnWidths: [
+              350,
+              120,
+              150,
+            ],
+            columns: const [
+              DataColumn(
+                label: Text(
+                  "Name",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  "Active",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  'Actions',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+            ],
+            rows: isEmpty
+                ? []
+                : brands!.items!
+                    .map(
+                      (e) => DataRow(
+                        cells: [
+                          DataCell(
+                            Text(e.name, style: const TextStyle(fontSize: 15)),
+                          ),
+                          DataCell(
+                            Icon(
+                              e.isActive
+                                  ? Icons.check_circle
+                                  : Icons.cancel,
+                              color: e.isActive ? Colors.green : Colors.red,
+                              size: 20,
+                            ),
+                          ),
+                          DataCell(
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(20),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              BrandDetailsScreen(brand: e),
+                                          settings: const RouteSettings(
+                                            name: 'BrandDetailsScreen',
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      alignment: Alignment.center,
+                                      child: const Icon(
+                                        Icons.info_outline,
+                                        color: Color(0xFF3182CE), // Info Blue
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(20),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              BrandEditScreen(brand: e),
+                                          settings: const RouteSettings(
+                                            name: 'BrandEditScreen',
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      alignment: Alignment.center,
+                                      child: const Icon(
+                                        Icons.edit_outlined,
+                                        color: Color(0xFFDD6B20), // Amber/Orange for Edit
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                    .toList(),
+            emptyIcon: Icons.branding_watermark,
+            emptyText: "No brands found.",
+            emptySubtext: "Try adjusting your search or add a new brand.",
+          ),
+          const SizedBox(height: 30),
+          BasePagination(
+            currentPage: _currentPage,
+            totalPages: totalPages,
+            onPrevious: isFirstPage
+                ? null
+                : () => _performSearch(page: _currentPage - 1),
+            onNext: isLastPage
+                ? null
+                : () => _performSearch(page: _currentPage + 1),
+            showPageSizeSelector: true,
+            pageSize: _pageSize,
+            pageSizeOptions: _pageSizeOptions,
+            onPageSizeChanged: (newSize) {
+              if (newSize != null && newSize != _pageSize) {
+                _performSearch(page: 0, pageSize: newSize);
+              }
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
