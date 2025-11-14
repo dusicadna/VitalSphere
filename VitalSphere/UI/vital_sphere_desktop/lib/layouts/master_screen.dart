@@ -399,7 +399,7 @@ class _MasterScreenState extends State<MasterScreen>
                     ),
                   ),
                   child: Image.asset(
-                    "assets/images/logo_large.png",
+                    "assets/images/logo_small.png",
                     height: 50,
                     width: 50,
                   ),

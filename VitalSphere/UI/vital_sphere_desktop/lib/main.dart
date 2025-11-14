@@ -12,7 +12,6 @@ import 'package:vital_sphere_desktop/providers/festival_provider.dart';
 import 'package:vital_sphere_desktop/providers/asset_provider.dart';
 import 'package:vital_sphere_desktop/providers/review_provider.dart';
 import 'package:vital_sphere_desktop/providers/ticket_provider.dart';
-import 'package:vital_sphere_desktop/providers/subcategory_provider.dart';
 import 'package:vital_sphere_desktop/providers/business_report_provider.dart';
 import 'package:vital_sphere_desktop/screens/business_report_screen.dart';
 import 'package:vital_sphere_desktop/utils/base_textfield.dart';
@@ -82,8 +81,8 @@ class MyApp extends StatelessWidget {
       title: 'ManiFest',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF6A1B9A), // Purple
-          primary: const Color(0xFF6A1B9A), // Purple
+          seedColor: const Color(0xFF2F855A), // Calming green
+          primary: const Color(0xFF2F855A),
         ),
         useMaterial3: true,
       ),
@@ -229,7 +228,7 @@ class _LoginPageState extends State<LoginPage>
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            "Sign in to your VitalSphere account",
+                            "Your wellness journey continues.",
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey[600],
@@ -287,11 +286,11 @@ class _LoginPageState extends State<LoginPage>
                             child: ElevatedButton(
                               onPressed: _isLoading ? null : _handleLogin,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF6A1B9A),
+                                backgroundColor: const Color(0xFF2F855A),
                                 foregroundColor: Colors.white,
                                 elevation: 4,
                                 shadowColor: const Color(
-                                  0xFF6A1B9A,
+                                  0xFF2F855A,
                                 ).withOpacity(0.3),
                                 padding: const EdgeInsets.symmetric(
                                   vertical: 18,

@@ -28,7 +28,7 @@ InputDecoration customTextFieldDecoration(
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12.0),
       borderSide: const BorderSide(
-        color: Color.fromARGB(255, 152, 3, 186),
+        color: Color(0xFF2F855A),
         width: 2.0,
       ),
     ),
