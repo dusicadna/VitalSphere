@@ -33,10 +33,11 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
     final int pageSizeToUse = pageSize ?? _pageSize;
 
     final filter = {
-      'userFullName': userFullNameController.text,
-      'wellnessServiceName': serviceNameController.text,
-      'minRating': selectedRating,
-      'maxRating': selectedRating,
+      if (userFullNameController.text.isNotEmpty) 
+        'userFullName': userFullNameController.text,
+      if (serviceNameController.text.isNotEmpty) 
+        'wellnessServiceName': serviceNameController.text,
+      if (selectedRating != null) 'rating': selectedRating,
       'page': pageToFetch,
       'pageSize': pageSizeToUse,
       'includeTotalCount': true,

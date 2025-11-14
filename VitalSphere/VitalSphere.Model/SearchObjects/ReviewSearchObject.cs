@@ -6,6 +6,8 @@ namespace VitalSphere.Model.SearchObjects
         public int? AppointmentId { get; set; }
         public int? WellnessServiceId { get; set; }
         public int? Rating { get; set; }
+        public string? UserFullName { get; set; }
+        public string? WellnessServiceName { get; set; }
     }
 }
 

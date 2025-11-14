@@ -43,6 +43,21 @@ namespace VitalSphere.Services.Services
                 query = query.Where(r => r.Rating == search.Rating.Value);
             }
 
+            if (!string.IsNullOrWhiteSpace(search.UserFullName))
+            {
+                query = query.Where(r => 
+                    (r.User != null && 
+                     (r.User.FirstName + " " + r.User.LastName).Contains(search.UserFullName!)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(search.WellnessServiceName))
+            {
+                query = query.Where(r => 
+                    r.Appointment != null && 
+                    r.Appointment.WellnessService != null && 
+                    r.Appointment.WellnessService.Name.Contains(search.WellnessServiceName!));
+            }
+
             return query;
         }
 
