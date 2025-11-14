@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:vital_sphere_desktop/screens/city_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/review_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/users_list_screen.dart';
+import 'package:vital_sphere_desktop/screens/product_category_list_screen.dart';
 import 'package:vital_sphere_desktop/providers/user_provider.dart';
 
 class MasterScreen extends StatefulWidget {
@@ -387,6 +388,14 @@ class _MasterScreenState extends State<MasterScreen>
             label: 'Users',
             screen: const UsersListScreen(),
           ),
+          const SizedBox(height: 16),
+          _modernDrawerTile(
+            context,
+            icon: Icons.category_outlined,
+            activeIcon: Icons.category_rounded,
+            label: 'Product Categories',
+            screen: const ProductCategoryListScreen(),
+          ),
           const Spacer(),
         ],
       ),
@@ -749,6 +758,11 @@ Widget _modernDrawerTile(
         currentRoute == 'UsersListScreen' ||
         currentRoute == 'UsersDetailsScreen' ||
         currentRoute == 'UsersEditScreen';
+  } else if (label == 'Product Categories') {
+    isSelected =
+        currentRoute == 'ProductCategoryListScreen' ||
+        currentRoute == 'ProductCategoryDetailsScreen' ||
+        currentRoute == 'ProductCategoryEditScreen';
   }
 
   return Container(

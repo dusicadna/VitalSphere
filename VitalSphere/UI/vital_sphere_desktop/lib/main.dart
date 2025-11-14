@@ -3,6 +3,7 @@ import 'package:vital_sphere_desktop/providers/auth_provider.dart';
 import 'package:vital_sphere_desktop/providers/city_provider.dart';
 import 'package:vital_sphere_desktop/providers/country_provider.dart';
 import 'package:vital_sphere_desktop/providers/category_provider.dart';
+import 'package:vital_sphere_desktop/providers/product_category_provider.dart';
 import 'package:vital_sphere_desktop/providers/subcategory_provider.dart';
 import 'package:vital_sphere_desktop/providers/user_provider.dart';
 import 'package:vital_sphere_desktop/providers/organizer_provider.dart';
@@ -65,6 +66,9 @@ void main() async {
         ),
         ChangeNotifierProvider<BusinessReportProvider>(
           create: (context) => BusinessReportProvider(),
+        ),
+        ChangeNotifierProvider<ProductCategoryProvider>(
+          create: (context) => ProductCategoryProvider(),
         ),
       ],
       child: const MyApp(),

@@ -63,7 +63,7 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreen(
-      title: 'Reviews',
+      title: 'Reviews Management',
       child: Center(
         child: Column(
           children: [
@@ -196,11 +196,11 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
             width: 1200,
             height: 423,
             columnWidths: const [
-              200, // Service
+              210, // Service
               150, // Full Name
               100, // Rating
-              300, // Comment
-              100, // Actions
+              500, // Comment
+              110, // Actions
             ],
             columns: const [
               DataColumn(

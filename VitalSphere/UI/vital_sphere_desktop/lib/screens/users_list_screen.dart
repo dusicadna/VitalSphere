@@ -172,12 +172,12 @@ class _UsersListScreenState extends State<UsersListScreen> {
             width: 1200,
             height: 423,
             columnWidths: [
-              200,
+              220,
               150,
-              250,
+              280,
               150,
               100,
-              100,
+              150,
             ], // Name, Username, Email, City, Active, Actions
             columns: const [
               DataColumn(

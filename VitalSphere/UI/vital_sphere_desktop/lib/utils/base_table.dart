@@ -147,6 +147,16 @@ class BaseTable extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
+        // Calculate table width based on column widths or use constraints
+        double tableWidth;
+        if (columnWidths != null && columnWidths!.isNotEmpty) {
+          // Sum of all column widths plus spacing between columns
+          tableWidth = columnWidths!.fold(0.0, (sum, width) => sum + width) +
+              (columnWidths!.length - 1) * columnSpacing;
+        } else {
+          tableWidth = constraints.maxWidth;
+        }
+
         return Container(
           margin: const EdgeInsets.all(16),
           width: double.infinity,
@@ -158,7 +168,7 @@ class BaseTable extends StatelessWidget {
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: SizedBox(
-              width: constraints.maxWidth, // Expand table to match container
+              width: tableWidth,
               child: DataTable(
                 showCheckboxColumn: showCheckboxColumn,
                 columnSpacing: columnSpacing,
@@ -172,8 +182,8 @@ class BaseTable extends StatelessWidget {
                   }
                   return null;
                 }),
-                columns: _buildModernColumns(context, constraints.maxWidth),
-                rows: _buildModernRows(context),
+                columns: _buildModernColumns(context, tableWidth),
+                rows: _buildModernRows(context, tableWidth),
                 dataTextStyle: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[800],
@@ -230,13 +240,25 @@ class BaseTable extends StatelessWidget {
     }).toList();
   }
 
-  List<DataRow> _buildModernRows(BuildContext context) {
+  List<DataRow> _buildModernRows(BuildContext context, double tableWidth) {
+    // Use custom column widths if provided, otherwise distribute evenly
+    List<double> widths;
+    if (columnWidths != null && columnWidths!.length == columns.length) {
+      widths = columnWidths!;
+    } else {
+      double columnWidth = tableWidth / columns.length;
+      widths = List.filled(columns.length, columnWidth);
+    }
+
     return rows.map((row) {
       return DataRow(
         onSelectChanged: row.onSelectChanged,
-        cells: row.cells.map((cell) {
+        cells: row.cells.asMap().entries.map((entry) {
+          int index = entry.key;
+          DataCell cell = entry.value;
           return DataCell(
             Container(
+              width: widths[index],
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
               child: cell.child,
             ),
