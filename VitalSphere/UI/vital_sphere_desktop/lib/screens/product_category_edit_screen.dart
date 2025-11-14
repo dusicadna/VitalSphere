@@ -216,9 +216,7 @@ class _ProductCategoryEditScreenState
                       prefixIcon: Icons.description_outlined,
                     ),
                     maxLines: 3,
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.maxLength(250),
-                    ]),
+                   
                   ),
                   const SizedBox(height: 16),
 

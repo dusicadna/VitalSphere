@@ -1,31 +1,29 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:vital_sphere_desktop/layouts/master_screen.dart';
-import 'package:vital_sphere_desktop/model/wellness_service_category.dart';
+import 'package:vital_sphere_desktop/model/product.dart';
 import 'package:vital_sphere_desktop/model/search_result.dart';
-import 'package:vital_sphere_desktop/providers/wellness_service_category_provider.dart';
-import 'package:vital_sphere_desktop/screens/wellness_service_category_details_screen.dart';
-import 'package:vital_sphere_desktop/screens/wellness_service_category_edit_screen.dart';
+import 'package:vital_sphere_desktop/providers/product_provider.dart';
+import 'package:vital_sphere_desktop/screens/product_details_screen.dart';
+import 'package:vital_sphere_desktop/screens/product_edit_screen.dart';
 import 'package:vital_sphere_desktop/utils/base_table.dart';
 import 'package:vital_sphere_desktop/utils/base_pagination.dart';
 import 'package:vital_sphere_desktop/utils/base_textfield.dart';
 import 'package:provider/provider.dart';
 
-class WellnessServiceCategoryListScreen extends StatefulWidget {
-  const WellnessServiceCategoryListScreen({super.key});
+class ProductListScreen extends StatefulWidget {
+  const ProductListScreen({super.key});
 
   @override
-  State<WellnessServiceCategoryListScreen> createState() =>
-      _WellnessServiceCategoryListScreenState();
+  State<ProductListScreen> createState() => _ProductListScreenState();
 }
 
-class _WellnessServiceCategoryListScreenState
-    extends State<WellnessServiceCategoryListScreen> {
-  late WellnessServiceCategoryProvider wellnessServiceCategoryProvider;
+class _ProductListScreenState extends State<ProductListScreen> {
+  late ProductProvider productProvider;
   TextEditingController nameController = TextEditingController();
   bool? selectedIsActive;
 
-  SearchResult<WellnessServiceCategory>? categories;
+  SearchResult<Product>? products;
   int _currentPage = 0;
   int _pageSize = 5;
   final List<int> _pageSizeOptions = [5, 7, 10, 20, 50];
@@ -41,11 +39,10 @@ class _WellnessServiceCategoryListScreenState
       'includeTotalCount': true,
     };
     debugPrint(filter.toString());
-    var categoriesResult =
-        await wellnessServiceCategoryProvider.get(filter: filter);
-    debugPrint(categoriesResult.items?.firstOrNull?.name);
+    var productsResult = await productProvider.get(filter: filter);
+    debugPrint(productsResult.items?.firstOrNull?.name);
     setState(() {
-      this.categories = categoriesResult;
+      this.products = productsResult;
       _currentPage = pageToFetch;
       _pageSize = pageSizeToUse;
     });
@@ -55,8 +52,7 @@ class _WellnessServiceCategoryListScreenState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      wellnessServiceCategoryProvider =
-          context.read<WellnessServiceCategoryProvider>();
+      productProvider = context.read<ProductProvider>();
 
       await _performSearch(page: 0);
     });
@@ -70,7 +66,7 @@ class _WellnessServiceCategoryListScreenState
   @override
   Widget build(BuildContext context) {
     return MasterScreen(
-      title: "Wellness Service Categories Management",
+      title: "Products Management",
       child: Center(
         child: Column(
           children: [
@@ -129,9 +125,8 @@ class _WellnessServiceCategoryListScreenState
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const WellnessServiceCategoryEditScreen(),
-                  settings: const RouteSettings(
-                      name: 'WellnessServiceCategoryEditScreen'),
+                  builder: (context) => const ProductEditScreen(),
+                  settings: const RouteSettings(name: 'ProductEditScreen'),
                 ),
               );
             },
@@ -140,7 +135,7 @@ class _WellnessServiceCategoryListScreenState
               foregroundColor: Colors.white,
             ),
             child: const Row(
-              children: [Icon(Icons.add), Text('Add Category')],
+              children: [Icon(Icons.add), Text('Add Product')],
             ),
           ),
         ],
@@ -150,8 +145,8 @@ class _WellnessServiceCategoryListScreenState
 
   Widget _buildResultView() {
     final isEmpty =
-        categories == null || categories!.items == null || categories!.items!.isEmpty;
-    final int totalCount = categories?.totalCount ?? 0;
+        products == null || products!.items == null || products!.items!.isEmpty;
+    final int totalCount = products?.totalCount ?? 0;
     final int totalPages = (totalCount / _pageSize).ceil();
     final bool isFirstPage = _currentPage == 0;
     final bool isLastPage =
@@ -160,16 +155,18 @@ class _WellnessServiceCategoryListScreenState
       child: Column(
         children: [
           BaseTable(
-            icon: Icons.spa_outlined,
-            title: "Wellness Service Categories",
-            width: 1200,
+            icon: Icons.shopping_bag_outlined,
+            title: "Products",
+            width: 1400,
             height: 423,
             columnWidths: [
-              120,
-              200,
-              500,
-              120,
-              150,
+              120,  // Image
+              300,  // Name
+              80,  // Price
+              160,  // Category
+              160,  // Brand
+              100,  // Status
+              150,  // Actions
             ],
             columns: const [
               DataColumn(
@@ -186,7 +183,19 @@ class _WellnessServiceCategoryListScreenState
               ),
               DataColumn(
                 label: Text(
-                  "Description",
+                  "Price",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  "Category",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
+              DataColumn(
+                label: Text(
+                  "Brand",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
@@ -205,12 +214,12 @@ class _WellnessServiceCategoryListScreenState
             ],
             rows: isEmpty
                 ? []
-                : categories!.items!
+                : products!.items!
                     .map(
                       (e) => DataRow(
                         cells: [
                           DataCell(
-                            e.image != null && e.image!.isNotEmpty
+                            e.picture != null && e.picture!.isNotEmpty
                                 ? Container(
                                     width: 60,
                                     height: 60,
@@ -224,14 +233,14 @@ class _WellnessServiceCategoryListScreenState
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
                                       child: Image.memory(
-                                        base64Decode(e.image!),
+                                        base64Decode(e.picture!),
                                         fit: BoxFit.cover,
                                         errorBuilder:
                                             (context, error, stackTrace) {
                                           return Container(
                                             color: Colors.grey[200],
                                             child: Icon(
-                                              Icons.spa,
+                                              Icons.shopping_bag,
                                               color: Colors.grey[400],
                                               size: 30,
                                             ),
@@ -248,7 +257,7 @@ class _WellnessServiceCategoryListScreenState
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Icon(
-                                      Icons.spa,
+                                      Icons.shopping_bag,
                                       color: Colors.grey[400],
                                       size: 30,
                                     ),
@@ -259,10 +268,20 @@ class _WellnessServiceCategoryListScreenState
                           ),
                           DataCell(
                             Text(
-                              e.description ?? 'No description',
+                              '\$${e.price.toStringAsFixed(2)}',
                               style: const TextStyle(fontSize: 15),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              e.productCategoryName,
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                          ),
+                          DataCell(
+                            Text(
+                              e.brandName,
+                              style: const TextStyle(fontSize: 15),
                             ),
                           ),
                           DataCell(
@@ -287,10 +306,9 @@ class _WellnessServiceCategoryListScreenState
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              WellnessServiceCategoryDetailsScreen(
-                                                  category: e),
+                                              ProductDetailsScreen(product: e),
                                           settings: const RouteSettings(
-                                            name: 'WellnessServiceCategoryDetailsScreen',
+                                            name: 'ProductDetailsScreen',
                                           ),
                                         ),
                                       );
@@ -317,10 +335,9 @@ class _WellnessServiceCategoryListScreenState
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              WellnessServiceCategoryEditScreen(
-                                                  category: e),
+                                              ProductEditScreen(product: e),
                                           settings: const RouteSettings(
-                                            name: 'WellnessServiceCategoryEditScreen',
+                                            name: 'ProductEditScreen',
                                           ),
                                         ),
                                       );
@@ -344,10 +361,9 @@ class _WellnessServiceCategoryListScreenState
                       ),
                     )
                     .toList(),
-            emptyIcon: Icons.spa,
-            emptyText: "No wellness service categories found.",
-            emptySubtext:
-                "Try adjusting your search or add a new wellness service category.",
+            emptyIcon: Icons.shopping_bag,
+            emptyText: "No products found.",
+            emptySubtext: "Try adjusting your search or add a new product.",
           ),
           const SizedBox(height: 30),
           BasePagination(
