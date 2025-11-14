@@ -91,63 +91,7 @@ class _CityListScreenState extends State<CityListScreen> {
     }
   }
 
-  Widget _buildCountryDropdown() {
-    if (_isLoadingCountries) {
-      return Container(
-        padding: EdgeInsets.all(16),
-        child: Row(
-          children: [
-            SizedBox(
-              width: 20,
-              height: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-            SizedBox(width: 16),
-            Text(
-              "Loading countries...",
-              style: TextStyle(color: Colors.grey[600]),
-            ),
-          ],
-        ),
-      );
-    }
-
-    if (_countries.isEmpty) {
-      return Container(
-        padding: EdgeInsets.all(16),
-        child: Text(
-          "No countries available",
-          style: TextStyle(color: Colors.red),
-        ),
-      );
-    }
-
-    return DropdownButtonFormField<Country>(
-      value: _selectedCountry,
-      decoration: customTextFieldDecoration(
-        "All Countries",
-        prefixIcon: Icons.flag,
-      ),
-      items: [
-        // Add "All Countries" option
-        DropdownMenuItem<Country>(value: null, child: Text("All Countries")),
-        // Add country options
-        ..._countries.map((country) {
-          return DropdownMenuItem<Country>(
-            value: country,
-            child: Text(country.name),
-          );
-        }).toList(),
-      ],
-      onChanged: (Country? value) {
-        setState(() {
-          _selectedCountry = value;
-        });
-        // Automatically search when country selection changes
-        _performSearch(page: 0);
-      },
-    );
-  }
+ 
 
   @override
   void didChangeDependencies() {
@@ -185,9 +129,7 @@ class _CityListScreenState extends State<CityListScreen> {
             ),
           ),
           SizedBox(width: 10),
-          // Country dropdown filter
-          SizedBox(width: 350, child: _buildCountryDropdown()),
-          SizedBox(width: 10),
+
           ElevatedButton(onPressed: _performSearch, child: Text("Search")),
           SizedBox(width: 10),
           ElevatedButton(
