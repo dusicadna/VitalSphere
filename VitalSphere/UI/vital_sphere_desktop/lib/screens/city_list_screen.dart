@@ -201,7 +201,7 @@ class _CityListScreenState extends State<CityListScreen> {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6A1B9A), // Purple
+              backgroundColor: const Color(0xFF2F855A), // Green
               foregroundColor: Colors.white, // white text & icon
             ),
             child: const Row(
@@ -235,12 +235,7 @@ class _CityListScreenState extends State<CityListScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
-              DataColumn(
-                label: Text(
-                  "Country",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-              ),
+             
             ],
             rows: isEmpty
                 ? []
@@ -263,12 +258,7 @@ class _CityListScreenState extends State<CityListScreen> {
                             DataCell(
                               Text(e.name, style: TextStyle(fontSize: 15)),
                             ),
-                            DataCell(
-                              Text(
-                                e.countryName,
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ),
+                          
                           ],
                         ),
                       )

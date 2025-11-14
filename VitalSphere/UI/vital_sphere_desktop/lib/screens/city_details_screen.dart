@@ -37,7 +37,6 @@ class _CityDetailsScreenState extends State<CityDetailsScreen> {
     countryProvider = Provider.of<CountryProvider>(context, listen: false);
     _initialValue = {
       "name": widget.city?.name ?? '',
-      "countryId": widget.city?.countryId ?? 0,
     };
     initFormData();
     _loadCountries();
@@ -81,7 +80,7 @@ class _CityDetailsScreenState extends State<CityDetailsScreen> {
       if (widget.city != null) {
         try {
           _selectedCountry = _countries.firstWhere(
-            (country) => country.id == widget.city!.countryId,
+            (country) => country.id == 0,
             orElse: () => _countries.first,
           );
         } catch (e) {
@@ -137,7 +136,6 @@ class _CityDetailsScreenState extends State<CityDetailsScreen> {
       onChanged: (Country? value) {
         setState(() {
           _selectedCountry = value;
-          _initialValue['countryId'] = value?.id ?? 0;
         });
       },
       validator: (value) {
@@ -196,7 +194,6 @@ class _CityDetailsScreenState extends State<CityDetailsScreen> {
 
                     setState(() => _isSaving = true);
                     var request = Map.from(formKey.currentState?.value ?? {});
-                    request['countryId'] = _selectedCountry!.id;
 
                     try {
                       if (widget.city == null) {
