@@ -4,6 +4,7 @@ import 'package:vital_sphere_desktop/main.dart';
 import 'package:flutter/services.dart';
 import 'package:vital_sphere_desktop/screens/city_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/review_list_screen.dart';
+import 'package:vital_sphere_desktop/screens/users_list_screen.dart';
 import 'package:vital_sphere_desktop/providers/user_provider.dart';
 
 class MasterScreen extends StatefulWidget {
@@ -378,6 +379,14 @@ class _MasterScreenState extends State<MasterScreen>
             label: 'Cities',
             screen: CityListScreen(),
           ),
+          const SizedBox(height: 16),
+          _modernDrawerTile(
+            context,
+            icon: Icons.people_outlined,
+            activeIcon: Icons.people_rounded,
+            label: 'Users',
+            screen: const UsersListScreen(),
+          ),
           const Spacer(),
         ],
       ),
@@ -733,6 +742,11 @@ Widget _modernDrawerTile(
     isSelected =
         currentRoute == 'ReviewListScreen' ||
         currentRoute == 'ReviewDetailsScreen';
+  } else if (label == 'Users') {
+    isSelected =
+        currentRoute == 'UsersListScreen' ||
+        currentRoute == 'UsersDetailsScreen' ||
+        currentRoute == 'UsersEditScreen';
   }
 
   return Container(

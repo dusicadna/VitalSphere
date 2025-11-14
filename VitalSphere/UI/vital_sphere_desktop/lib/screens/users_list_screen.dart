@@ -63,7 +63,7 @@ class _UsersListScreenState extends State<UsersListScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreen(
-      title: 'Users',
+      title: 'Users Management',
       child: Center(
         child: Column(
           children: [
@@ -258,44 +258,60 @@ class _UsersListScreenState extends State<UsersListScreen> {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              UsersDetailsScreen(user: e),
-                                          settings: const RouteSettings(
-                                            name: 'UsersDetailsScreen',
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(20),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                UsersDetailsScreen(user: e),
+                                            settings: const RouteSettings(
+                                              name: 'UsersDetailsScreen',
+                                            ),
                                           ),
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 40,
+                                        height: 40,
+                                        alignment: Alignment.center,
+                                        child: const Icon(
+                                          Icons.info_outline,
+color: Color(0xFF3182CE), // Info Blue                                          size: 20,
                                         ),
-                                      );
-                                    },
-                                    icon: const Icon(
-                                      Icons.info_outline,
-                                      color: Colors.blue,
+                                      ),
                                     ),
-                                    tooltip: 'View Details',
                                   ),
                                   const SizedBox(width: 8),
-                                  IconButton(
-                                    onPressed: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              UsersEditScreen(user: e),
-                                          settings: const RouteSettings(
-                                            name: 'UsersEditScreen',
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(20),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                UsersEditScreen(user: e),
+                                            settings: const RouteSettings(
+                                              name: 'UsersEditScreen',
+                                            ),
                                           ),
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 40,
+                                        height: 40,
+                                        alignment: Alignment.center,
+                                        child: const Icon(
+                                          Icons.edit_outlined,
+color: Color(0xFFDD6B20), // Amber/Orange for Edit                                          size: 20,
                                         ),
-                                      );
-                                    },
-                                    icon: const Icon(
-                                      Icons.edit_outlined,
-                                      color: Colors.orange,
+                                      ),
                                     ),
-                                    tooltip: 'Edit User',
                                   ),
                                 ],
                               ),

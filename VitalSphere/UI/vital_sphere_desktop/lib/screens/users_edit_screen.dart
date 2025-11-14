@@ -359,7 +359,7 @@ class _UsersEditScreenState extends State<UsersEditScreen> {
                   }
                 },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: const Color(0xFF2F855A),
             foregroundColor: Colors.white,
           ),
           child: _isSaving
@@ -409,7 +409,7 @@ class _UsersEditScreenState extends State<UsersEditScreen> {
                         const Icon(
                           Icons.person,
                           size: 32,
-                          color: Color(0xFF6A1B9A),
+                          color: Color(0xFF2F855A),
                         ),
                         const SizedBox(width: 16),
                         const Text(
@@ -417,7 +417,7 @@ class _UsersEditScreenState extends State<UsersEditScreen> {
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF6A1B9A),
+                            color: Color(0xFF2F855A),
                           ),
                         ),
                       ],
@@ -489,7 +489,7 @@ class _UsersEditScreenState extends State<UsersEditScreen> {
                                         label: const Text("Select Image"),
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: const Color(
-                                            0xFF6A1B9A,
+                                            0xFF2F855A,
                                           ),
                                           foregroundColor: Colors.white,
                                           padding: const EdgeInsets.symmetric(
