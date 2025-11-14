@@ -3,16 +3,7 @@ import 'dart:convert';
 import 'package:vital_sphere_desktop/main.dart';
 import 'package:flutter/services.dart';
 import 'package:vital_sphere_desktop/screens/city_list_screen.dart';
-import 'package:vital_sphere_desktop/screens/country_list_screen.dart';
-import 'package:vital_sphere_desktop/screens/category_list_screen.dart';
-import 'package:vital_sphere_desktop/screens/organizer_list_screen.dart';
-import 'package:vital_sphere_desktop/screens/subcategory_list_screen.dart';
-import 'package:vital_sphere_desktop/screens/ticket_type_list_screen.dart';
-import 'package:vital_sphere_desktop/screens/users_list_screen.dart';
-import 'package:vital_sphere_desktop/screens/festival_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/review_list_screen.dart';
-import 'package:vital_sphere_desktop/screens/ticket_list_screen.dart';
-import 'package:vital_sphere_desktop/screens/business_report_screen.dart';
 import 'package:vital_sphere_desktop/providers/user_provider.dart';
 
 class MasterScreen extends StatefulWidget {
@@ -74,7 +65,7 @@ class _MasterScreenState extends State<MasterScreen>
     }
     return CircleAvatar(
       radius: radius,
-      backgroundColor: const Color(0xFF6A1B9A),
+      backgroundColor: const Color(0xFF2F855A),
       backgroundImage: imageProvider,
       child: imageProvider == null
           ? Text(
@@ -199,7 +190,7 @@ class _MasterScreenState extends State<MasterScreen>
                                 const Icon(
                                   Icons.email_outlined,
                                   size: 18,
-                                  color: Color(0xFF6A1B9A),
+                                  color: Color(0xFF2F855A),
                                 ),
                                 const SizedBox(width: 8),
                                 Expanded(
@@ -222,7 +213,7 @@ class _MasterScreenState extends State<MasterScreen>
                                 const Icon(
                                   Icons.location_city_outlined,
                                   size: 18,
-                                  color: Color(0xFF6A1B9A),
+                                  color: Color(0xFF2F855A),
                                 ),
                                 const SizedBox(width: 8),
                                 Expanded(
@@ -267,12 +258,12 @@ class _MasterScreenState extends State<MasterScreen>
             icon: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: const Color(0xFF6A1B9A).withOpacity(0.1),
+                  color: const Color(0xFF2F855A).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
                 Icons.menu_rounded,
-                color: Color(0xFF6A1B9A),
+                color: Color(0xFF2F855A),
                 size: 20,
               ),
             ),
@@ -314,14 +305,7 @@ class _MasterScreenState extends State<MasterScreen>
                       letterSpacing: -0.3,
                     ),
                   ),
-                  Text(
-                    'ManiFest Admin Panel',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.grey[600],
-                    ),
-                  ),
+                  _buildSubheader(),
                 ],
               ),
             ),
@@ -361,184 +345,180 @@ class _MasterScreenState extends State<MasterScreen>
   }
 
   Widget _buildDrawerContent() {
+    const gradientColors = [
+      Color(0xFF163A2A),
+      Color(0xFF20523A),
+      Color(0xFF2F855A),
+    ];
+
     return Container(
       margin: const EdgeInsets.only(top: 16, bottom: 16, right: 8),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF6A1B9A), Color(0xFF8E24AA)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: gradientColors,
         ),
         borderRadius: const BorderRadius.only(
-          topRight: Radius.circular(24),
-          bottomRight: Radius.circular(24),
+          topRight: Radius.circular(28),
+          bottomRight: Radius.circular(28),
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF6A1B9A).withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(4, 0),
+            color: const Color(0xFF1C4532).withOpacity(0.35),
+            blurRadius: 24,
+            offset: const Offset(6, 0),
           ),
         ],
       ),
       child: Column(
         children: [
-          // Header section
-          Container(
-            padding: const EdgeInsets.all(32),
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.3),
-                      width: 2,
-                    ),
-                  ),
-                  child: Image.asset(
-                    "assets/images/logo_small.png",
-                    height: 50,
-                    width: 50,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'VitalSphere',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                Text(
-                  'Admin Dashboard',
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.8),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
+          _buildDrawerHeader(),
+          Expanded(child: _buildFocusedNav(context)),
+          _buildDrawerFooter(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSubheader() {
+    return Row(
+      children: [
+        Container(
+          width: 6,
+          height: 6,
+          decoration: const BoxDecoration(
+            color: Color(0xFF2F855A),
+            shape: BoxShape.circle,
           ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          'VitalSphere Admin Dashboard',
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey[600],
+            letterSpacing: 0.25,
+          ),
+        ),
+      ],
+    );
+  }
 
-          // Navigation section - Scrollable
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _modernDrawerTile(
-                      context,
-                      icon: Icons.analytics_outlined,
-                      activeIcon: Icons.analytics,
-                      label: 'Business Report',
-                      screen: const BusinessReportScreen(),
-                    ),
-                    const SizedBox(height: 8),
-                    _modernDrawerTile(
-                      context,
-                      icon: Icons.festival,
-                      activeIcon: Icons.festival,
-                      label: 'Festivals',
-                      screen: FestivalListScreen(),
-                    ),
-                    const SizedBox(height: 8),
-                    _modernDrawerTile(
-                      context,
-                      icon: Icons.confirmation_number_outlined,
-                      activeIcon: Icons.confirmation_number,
-                      label: 'Tickets',
-                      screen: TicketListScreen(),
-                    ),
-                    const SizedBox(height: 8),
-                    _modernDrawerTile(
-                      context,
-                      icon: Icons.confirmation_number_outlined,
-                      activeIcon: Icons.confirmation_number,
-                      label: 'Ticket Types',
-                      screen: TicketTypeListScreen(),
-                    ),
-                    const SizedBox(height: 8),
-                    _modernDrawerTile(
-                      context,
-                      icon: Icons.rate_review_outlined,
-                      activeIcon: Icons.rate_review,
-                      label: 'Reviews',
-                      screen: ReviewListScreen(),
-                    ),
-                    const SizedBox(height: 8),
-                    _modernDrawerTile(
-                      context,
-                      icon: Icons.people_outlined,
-                      activeIcon: Icons.people,
-                      label: 'Users',
-                      screen: UsersListScreen(),
-                    ),
-                    const SizedBox(height: 8),
-                    _modernDrawerTile(
-                      context,
-                      icon: Icons.business, // Business/company style icon
-                      activeIcon: Icons.apartment, // Active state icon
-                      label: 'Organizers',
-                      screen: OrganizerListScreen(),
-                    ),
-                    const SizedBox(height: 8),
-                    _modernDrawerTile(
-                      context,
-                      icon: Icons.category_outlined,
-                      activeIcon: Icons.category,
-                      label: 'Categories',
-                      screen: CategoryListScreen(),
-                    ),
-                    const SizedBox(height: 8),
-                    _modernDrawerTile(
-                      context,
-                      icon: Icons.view_list_outlined,
-                      activeIcon: Icons.view_list,
-                      label: 'Subcategories',
-                      screen: SubcategoryListScreen(),
-                    ),
-                    const SizedBox(height: 8),
-                    _modernDrawerTile(
-                      context,
-                      icon: Icons.flag_outlined,
-                      activeIcon: Icons.flag,
-                      label: 'Countries',
-                      screen: CountryListScreen(),
-                    ),
-                    const SizedBox(height: 8),
-                    _modernDrawerTile(
-                      context,
-                      icon: Icons.location_city_outlined,
-                      activeIcon: Icons.location_city_rounded,
-                      label: 'Cities',
-                      screen: CityListScreen(),
-                    ),
-
-                    // Add more tiles here in the future
-                  ],
-                ),
+  Widget _buildDrawerHeader() {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(28, 32, 28, 24),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0x442F855A),
+            Color(0x662F855A),
+          ],
+        ),
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(28),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.10),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.24),
+                width: 1.4,
               ),
             ),
+            child: ClipRRect(
+  borderRadius: BorderRadius.circular(12), // adjust radius
+  child: Image.asset(
+    'assets/images/logo_small.png',
+    width: 55,
+    height: 55,
+  ),
+)
           ),
+          const SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'VitalSphere',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: 0.4,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Admin Dashboard',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.3,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
-          // Bottom section
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Divider(color: Colors.white.withOpacity(0.2), thickness: 1),
-                const SizedBox(height: 8),
-                _modernLogoutTile(context),
-              ],
-            ),
+  Widget _buildFocusedNav(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _modernDrawerTile(
+            context,
+            icon: Icons.rate_review_outlined,
+            activeIcon: Icons.rate_review,
+            label: 'Reviews',
+            screen: ReviewListScreen(),
           ),
+          const SizedBox(height: 16),
+          _modernDrawerTile(
+            context,
+            icon: Icons.location_city_outlined,
+            activeIcon: Icons.location_city_rounded,
+            label: 'Cities',
+            screen: CityListScreen(),
+          ),
+          const Spacer(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDrawerFooter(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          bottomRight: Radius.circular(28),
+        ),
+        color: Colors.black.withOpacity(0.08),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Divider(
+            color: Colors.white.withOpacity(0.18),
+            thickness: 1,
+          ),
+          const SizedBox(height: 12),
+          _modernLogoutTile(context),
         ],
       ),
     );
@@ -558,49 +538,13 @@ Widget _modernDrawerTile(
   // Get the current screen type from the route
   bool isSelected = false;
 
-  if (label == 'Business Report') {
-    isSelected = currentRoute == 'BusinessReportScreen';
-  } else if (label == 'Categories') {
-    isSelected =
-        currentRoute == 'CategoryListScreen' ||
-        currentRoute == 'CategoryDetailsScreen';
-  } else if (label == 'Cities') {
+  if (label == 'Cities') {
     isSelected =
         currentRoute == 'CityListScreen' || currentRoute == 'CityDetailsScreen';
-  } else if (label == 'Countries') {
-    isSelected =
-        currentRoute == 'CountryListScreen' ||
-        currentRoute == 'CountryDetailsScreen';
-  } else if (label == 'Subcategories') {
-    isSelected =
-        currentRoute == 'SubcategoryListScreen' ||
-        currentRoute == 'SubcategoryDetailsScreen';
-  } else if (label == 'Organizers') {
-    isSelected =
-        currentRoute == 'OrganizerListScreen' ||
-        currentRoute == 'OrganizerDetailsScreen';
-  } else if (label == 'Ticket Types') {
-    isSelected =
-        currentRoute == 'TicketTypeListScreen' ||
-        currentRoute == 'TicketTypeDetailsScreen';
-  } else if (label == 'Users') {
-    isSelected =
-        currentRoute == 'UsersListScreen' ||
-        currentRoute == 'UsersDetailsScreen' ||
-        currentRoute == 'UsersEditScreen';
-  } else if (label == 'Festivals') {
-    isSelected =
-        currentRoute == 'FestivalListScreen' ||
-        currentRoute == 'FestivalDetailsScreen' ||
-        currentRoute == 'FestivalUpsertScreen';
   } else if (label == 'Reviews') {
     isSelected =
         currentRoute == 'ReviewListScreen' ||
         currentRoute == 'ReviewDetailsScreen';
-  } else if (label == 'Tickets') {
-    isSelected =
-        currentRoute == 'TicketListScreen' ||
-        currentRoute == 'TicketDetailsScreen';
   }
 
   return Container(
@@ -725,7 +669,7 @@ void _showLogoutDialog(BuildContext context) {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: const Row(
           children: [
-            Icon(Icons.logout_rounded, color: Color(0xFF6A1B9A)),
+            Icon(Icons.logout_rounded, color: Color(0xFF2F855A)),
             SizedBox(width: 12),
             Text('Confirm Logout'),
           ],
@@ -750,7 +694,7 @@ void _showLogoutDialog(BuildContext context) {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6A1B9A),
+              backgroundColor: const Color(0xFF2F855A),
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
