@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vital_sphere_desktop/layouts/master_screen.dart';
 import 'package:vital_sphere_desktop/model/city.dart';
-import 'package:vital_sphere_desktop/model/country.dart';
 import 'package:vital_sphere_desktop/model/search_result.dart';
 import 'package:vital_sphere_desktop/providers/city_provider.dart';
-import 'package:vital_sphere_desktop/providers/country_provider.dart';
 import 'package:vital_sphere_desktop/screens/city_details_screen.dart';
 import 'package:vital_sphere_desktop/utils/base_table.dart';
 import 'package:vital_sphere_desktop/utils/base_pagination.dart';
@@ -20,12 +18,7 @@ class CityListScreen extends StatefulWidget {
 
 class _CityListScreenState extends State<CityListScreen> {
   late CityProvider cityProvider;
-  late CountryProvider countryProvider;
-
   TextEditingController nameController = TextEditingController();
-  Country? _selectedCountry;
-  bool _isLoadingCountries = true;
-  List<Country> _countries = [];
 
   SearchResult<City>? cities;
   int _currentPage = 0;
@@ -38,7 +31,6 @@ class _CityListScreenState extends State<CityListScreen> {
     final int pageSizeToUse = pageSize ?? _pageSize;
     var filter = {
       "name": nameController.text,
-      "countryId": _selectedCountry?.id,
       "page": pageToFetch,
       "pageSize": pageSizeToUse,
       "includeTotalCount": true, // Ensure backend returns total count
@@ -59,36 +51,9 @@ class _CityListScreenState extends State<CityListScreen> {
     // Delay to ensure context is available for Provider
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       cityProvider = context.read<CityProvider>();
-      countryProvider = context.read<CountryProvider>();
-      await _loadCountries();
+
       await _performSearch(page: 0);
     });
-  }
-
-  Future<void> _loadCountries() async {
-    try {
-      setState(() {
-        _isLoadingCountries = true;
-      });
-
-      final result = await countryProvider.get();
-      if (result.items != null && result.items!.isNotEmpty) {
-        setState(() {
-          _countries = result.items!;
-          _isLoadingCountries = false;
-        });
-      } else {
-        setState(() {
-          _countries = [];
-          _isLoadingCountries = false;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        _countries = [];
-        _isLoadingCountries = false;
-      });
-    }
   }
 
  

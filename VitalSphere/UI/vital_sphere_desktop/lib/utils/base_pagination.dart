@@ -24,12 +24,6 @@ class BasePagination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int divisions = pageSizeOptions.length > 1
-        ? pageSizeOptions.length - 1
-        : 1;
-    int sliderValueIndex = pageSizeOptions.indexOf(pageSize);
-    if (sliderValueIndex == -1) sliderValueIndex = 0;
-
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       decoration: BoxDecoration(
@@ -97,90 +91,11 @@ class BasePagination extends StatelessWidget {
 
           // Right side: Page size selector
           if (showPageSizeSelector)
-            _buildPageSizeSelector(context, sliderValueIndex, divisions),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPageSizeSelector(
-    BuildContext context,
-    int sliderValueIndex,
-    int divisions,
-  ) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 120,
-            child: SliderTheme(
-              data: SliderTheme.of(context).copyWith(
-                activeTrackColor: Theme.of(context).colorScheme.primary,
-                inactiveTrackColor: Colors.grey[300],
-                thumbColor: Theme.of(context).colorScheme.primary,
-                overlayColor: Theme.of(
-                  context,
-                ).colorScheme.primary.withOpacity(0.2),
-                valueIndicatorColor: Theme.of(context).colorScheme.primary,
-                trackHeight: 2,
-                thumbShape: const RoundSliderThumbShape(
-                  enabledThumbRadius: 8,
-                  elevation: 2,
-                ),
-                valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
-                valueIndicatorTextStyle: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12,
-                ),
-              ),
-              child: Slider(
-                min: 0,
-                max: (pageSizeOptions.length - 1).toDouble(),
-                divisions: divisions,
-                value: sliderValueIndex.toDouble(),
-                label: pageSizeOptions[sliderValueIndex].toString(),
-                onChanged: (double newIndex) {
-                  int idx = newIndex.round();
-                  if (onPageSizeChanged != null) {
-                    onPageSizeChanged!(pageSizeOptions[idx]);
-                  }
-                },
-              ),
+            _PageSizeSelector(
+              options: pageSizeOptions,
+              selected: pageSize,
+              onChanged: onPageSizeChanged,
             ),
-          ),
-          const SizedBox(width: 16),
-          Container(
-            width: 48,
-            height: 40,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Text(
-              pageSizeOptions[sliderValueIndex].toString(),
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-                color: Colors.white,
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -230,6 +145,246 @@ class BasePagination extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
             ),
             if (isNext) ...[const SizedBox(width: 8), Icon(icon, size: 20)],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _PageSizeSelector extends StatefulWidget {
+  const _PageSizeSelector({
+    required this.options,
+    required this.selected,
+    required this.onChanged,
+  });
+
+  final List<int> options;
+  final int selected;
+  final ValueChanged<int?>? onChanged;
+
+  @override
+  State<_PageSizeSelector> createState() => _PageSizeSelectorState();
+}
+
+class _PageSizeSelectorState extends State<_PageSizeSelector>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _opacity;
+  late final Animation<double> _scale;
+  bool _open = false;
+  OverlayEntry? _overlayEntry;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _opacity = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeOutCubic,
+    );
+    _scale = Tween<double>(begin: 0.94, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeOutBack,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _hideOverlay(removeOnly: true);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _toggle() {
+    setState(() {
+      _open = !_open;
+      if (_open) {
+        _showOverlay();
+        _controller.forward();
+      } else {
+        _controller.reverse().then((_) => _hideOverlay());
+      }
+    });
+  }
+
+  void _showOverlay() {
+    final overlay = Overlay.of(context);
+    if (overlay == null) return;
+
+    final RenderBox box = context.findRenderObject() as RenderBox;
+    final Size buttonSize = box.size;
+    final Offset buttonPosition = box.localToGlobal(Offset.zero);
+    final double panelWidth = 180;
+    final double panelHeight =
+        widget.options.length * 42.0 + 20; // item height + padding
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) {
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: _toggle,
+              ),
+            ),
+            Positioned(
+              left: buttonPosition.dx + buttonSize.width - panelWidth,
+              top: buttonPosition.dy - panelHeight - 12,
+              width: panelWidth,
+              child: AnimatedBuilder(
+                animation: _controller,
+                builder: (context, child) => Opacity(
+                  opacity: _opacity.value,
+                  child: Transform.scale(
+                    scale: _scale.value,
+                    alignment: Alignment.bottomRight,
+                    child: child,
+                  ),
+                ),
+                child: Material(
+                  elevation: 8,
+                  shadowColor: Colors.black.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.white,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: widget.options.map((option) {
+                        final bool isSelected = widget.selected == option;
+                        final theme = Theme.of(context);
+                        final primary = theme.colorScheme.primary;
+                        return InkWell(
+                          borderRadius: BorderRadius.circular(8),
+                          onTap: () {
+                            widget.onChanged?.call(option);
+                            _toggle();
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 10,
+                              horizontal: 14,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: isSelected
+                                  ? primary.withOpacity(0.08)
+                                  : Colors.transparent,
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  height: 16,
+                                  width: 16,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: isSelected
+                                        ? primary
+                                        : Colors.grey.withOpacity(0.3),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  option.toString(),
+                                  style: TextStyle(
+                                    fontWeight: isSelected
+                                        ? FontWeight.w600
+                                        : FontWeight.w500,
+                                    color: isSelected
+                                        ? primary
+                                        : Colors.grey[700],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+
+    overlay.insert(_overlayEntry!);
+  }
+
+  void _hideOverlay({bool removeOnly = false}) {
+    if (_overlayEntry != null) {
+      _overlayEntry!.remove();
+      _overlayEntry = null;
+    }
+    if (!removeOnly && mounted) {
+      setState(() {
+        _open = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    return GestureDetector(
+      onTap: _toggle,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: _open ? primary.withOpacity(0.25) : Colors.grey[200]!,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Rows per page',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                widget.selected.toString(),
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: primary,
+                ),
+              ),
+            ),
+            const SizedBox(width: 6),
+            AnimatedRotation(
+              turns: _open ? 0.5 : 0,
+              duration: const Duration(milliseconds: 200),
+              child: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: primary,
+              ),
+            ),
           ],
         ),
       ),
