@@ -737,7 +737,9 @@ Widget _modernDrawerTile(
 
   if (label == 'Cities') {
     isSelected =
-        currentRoute == 'CityListScreen' || currentRoute == 'CityDetailsScreen';
+        currentRoute == 'CityListScreen' ||
+        currentRoute == 'CityDetailsScreen' ||
+        currentRoute == 'CityEditScreen';
   } else if (label == 'Reviews') {
     isSelected =
         currentRoute == 'ReviewListScreen' ||

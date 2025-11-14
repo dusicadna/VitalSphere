@@ -4,6 +4,7 @@ import 'package:vital_sphere_desktop/model/city.dart';
 import 'package:vital_sphere_desktop/model/search_result.dart';
 import 'package:vital_sphere_desktop/providers/city_provider.dart';
 import 'package:vital_sphere_desktop/screens/city_details_screen.dart';
+import 'package:vital_sphere_desktop/screens/city_edit_screen.dart';
 import 'package:vital_sphere_desktop/utils/base_table.dart';
 import 'package:vital_sphere_desktop/utils/base_pagination.dart';
 import 'package:vital_sphere_desktop/utils/base_textfield.dart';
@@ -102,8 +103,8 @@ class _CityListScreenState extends State<CityListScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CityDetailsScreen(),
-                  settings: const RouteSettings(name: 'CityDetailsScreen'),
+                  builder: (context) => const CityEditScreen(),
+                  settings: const RouteSettings(name: 'CityEditScreen'),
                 ),
               );
             },
@@ -133,39 +134,95 @@ class _CityListScreenState extends State<CityListScreen> {
           BaseTable(
             icon: Icons.location_city_outlined,
             title: "Cities",
-            width: 600,
+            width: 500,
             height: 423,
-            columns: [
+            columns: const [
               DataColumn(
                 label: Text(
                   "Name",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
-             
+              DataColumn(
+                label: Text(
+                  'Actions',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+              ),
             ],
             rows: isEmpty
                 ? []
                 : cities!.items!
                       .map(
                         (e) => DataRow(
-                          onSelectChanged: (value) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    CityDetailsScreen(city: e),
-                                settings: const RouteSettings(
-                                  name: 'CityDetailsScreen',
-                                ),
-                              ),
-                            );
-                          },
                           cells: [
                             DataCell(
-                              Text(e.name, style: TextStyle(fontSize: 15)),
+                              Text(e.name, style: const TextStyle(fontSize: 15)),
                             ),
-                          
+                            DataCell(
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(20),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CityDetailsScreen(city: e),
+                                            settings: const RouteSettings(
+                                              name: 'CityDetailsScreen',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 40,
+                                        height: 40,
+                                        alignment: Alignment.center,
+                                        child: const Icon(
+                                          Icons.info_outline,
+                                          color: Color(0xFF3182CE), // Info Blue
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(20),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CityEditScreen(city: e),
+                                            settings: const RouteSettings(
+                                              name: 'CityEditScreen',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 40,
+                                        height: 40,
+                                        alignment: Alignment.center,
+                                        child: const Icon(
+                                          Icons.edit_outlined,
+                                          color: Color(0xFFDD6B20), // Amber/Orange for Edit
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       )
