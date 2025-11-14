@@ -7,6 +7,7 @@ import 'package:vital_sphere_desktop/screens/review_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/users_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/product_category_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/brand_list_screen.dart';
+import 'package:vital_sphere_desktop/screens/wellness_service_category_list_screen.dart';
 import 'package:vital_sphere_desktop/providers/user_provider.dart';
 
 class MasterScreen extends StatefulWidget {
@@ -367,6 +368,18 @@ class _MasterScreenState extends State<MasterScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Wellness Section
+            _buildSectionHeader('Wellness Section'),
+            const SizedBox(height: 8),
+            _modernDrawerTile(
+              context,
+              icon: Icons.spa_outlined,
+              activeIcon: Icons.spa,
+              label: 'Wellness Categories',
+              screen: const WellnessServiceCategoryListScreen(),
+            ),
+            const SizedBox(height: 24),
+            
             // Product Section
             _buildSectionHeader('Product Section'),
             const SizedBox(height: 8),
@@ -804,6 +817,11 @@ Widget _modernDrawerTile(
         currentRoute == 'BrandListScreen' ||
         currentRoute == 'BrandDetailsScreen' ||
         currentRoute == 'BrandEditScreen';
+  } else if (label == 'Wellness Service Categories') {
+    isSelected =
+        currentRoute == 'WellnessServiceCategoryListScreen' ||
+        currentRoute == 'WellnessServiceCategoryDetailsScreen' ||
+        currentRoute == 'WellnessServiceCategoryEditScreen';
   }
 
   return Container(
