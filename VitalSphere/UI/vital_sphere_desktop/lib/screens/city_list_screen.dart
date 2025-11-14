@@ -66,7 +66,7 @@ class _CityListScreenState extends State<CityListScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreen(
-      title: "Cities",
+      title: "Cities Management",
       child: Center(
         child: Column(
           children: [
