@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vital_sphere_desktop/layouts/master_screen.dart';
 import 'package:vital_sphere_desktop/model/review.dart';
-import 'package:vital_sphere_desktop/model/festival.dart';
 import 'package:vital_sphere_desktop/model/search_result.dart';
 import 'package:vital_sphere_desktop/providers/review_provider.dart';
-import 'package:vital_sphere_desktop/providers/festival_provider.dart';
 import 'package:vital_sphere_desktop/screens/review_details_screen.dart';
 import 'package:vital_sphere_desktop/utils/base_pagination.dart';
 import 'package:vital_sphere_desktop/utils/base_table.dart';
@@ -20,11 +18,9 @@ class ReviewListScreen extends StatefulWidget {
 
 class _ReviewListScreenState extends State<ReviewListScreen> {
   late ReviewProvider reviewProvider;
-  late FestivalProvider festivalProvider;
-  List<Festival> festivals = [];
 
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController festivalTitleController = TextEditingController();
+  final TextEditingController userFullNameController = TextEditingController();
+  final TextEditingController serviceNameController = TextEditingController();
   int? selectedRating;
 
   SearchResult<Review>? reviews;
@@ -37,8 +33,8 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
     final int pageSizeToUse = pageSize ?? _pageSize;
 
     final filter = {
-      'userFullName': usernameController.text,
-      'festivalTitle': festivalTitleController.text,
+      'userFullName': userFullNameController.text,
+      'wellnessServiceName': serviceNameController.text,
       'minRating': selectedRating,
       'maxRating': selectedRating,
       'page': pageToFetch,
@@ -59,29 +55,8 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       reviewProvider = context.read<ReviewProvider>();
-      festivalProvider = context.read<FestivalProvider>();
-      await _loadFestivals();
       await _performSearch(page: 0);
     });
-  }
-
-  Future<void> _loadFestivals() async {
-    try {
-      final result = await festivalProvider.get(
-        filter: {
-          'page': 0,
-          'pageSize': 1000, // Get all festivals
-          'includeTotalCount': false,
-        },
-      );
-      if (result.items != null) {
-        setState(() {
-          festivals = result.items!;
-        });
-      }
-    } catch (e) {
-      // Handle error silently for now
-    }
   }
 
   @override
@@ -112,7 +87,7 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
                     'Full Name',
                     prefixIcon: Icons.person,
                   ),
-                  controller: usernameController,
+                  controller: userFullNameController,
                   onSubmitted: (_) => _performSearch(page: 0),
                 ),
               ),
@@ -120,10 +95,10 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
               Expanded(
                 child: TextField(
                   decoration: customTextFieldDecoration(
-                    'Title',
-                    prefixIcon: Icons.festival,
+                    'Service Name',
+                    prefixIcon: Icons.spa_outlined,
                   ),
-                  controller: festivalTitleController,
+                  controller: serviceNameController,
                   onSubmitted: (_) => _performSearch(page: 0),
                 ),
               ),
@@ -182,9 +157,9 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
                   const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: () {
-                      usernameController.clear();
+                      userFullNameController.clear();
                       setState(() {
-                        festivalTitleController.clear();
+                        serviceNameController.clear();
                         selectedRating = null;
                       });
                       _performSearch(page: 0);
@@ -219,18 +194,17 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
             title: 'Reviews',
             width: 1200,
             height: 423,
-            columnWidths: [
-              200, // Festival
+            columnWidths: const [
+              200, // Service
               150, // Full Name
               100, // Rating
               300, // Comment
-              150, // Date
               100, // Actions
             ],
             columns: const [
               DataColumn(
                 label: Text(
-                  'Festival',
+                  'Service',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
@@ -252,12 +226,7 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
-              DataColumn(
-                label: Text(
-                  'Date',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-              ),
+
               DataColumn(
                 label: Text(
                   'Actions',
@@ -273,7 +242,7 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
                           cells: [
                             DataCell(
                               Text(
-                                e.festivalTitle,
+                                e.wellnessServiceName,
                                 style: const TextStyle(fontSize: 15),
                               ),
                             ),
@@ -305,31 +274,40 @@ class _ReviewListScreenState extends State<ReviewListScreen> {
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
+
                             DataCell(
-                              Text(
-                                '${e.createdAt.day}/${e.createdAt.month}/${e.createdAt.year}',
-                                style: const TextStyle(fontSize: 15),
-                              ),
-                            ),
-                            DataCell(
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ReviewDetailsScreen(review: e),
-                                      settings: const RouteSettings(
-                                        name: 'ReviewDetailsScreen',
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(20),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ReviewDetailsScreen(review: e),
+                                            settings: const RouteSettings(
+                                              name: 'ReviewDetailsScreen',
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        width: 40,
+                                        height: 40,
+                                        alignment: Alignment.center,
+                                        child: const Icon(
+                                          Icons.info_outline,
+                                          color: Color(0xFF3182CE), // Info Blue
+                                          size: 20,
+                                        ),
                                       ),
                                     ),
-                                  );
-                                },
-                                icon: const Icon(
-                                  Icons.info_outline,
-                                  color: Colors.blue,
-                                ),
-                                tooltip: 'View Details',
+                                  ),
+                                ],
                               ),
                             ),
                           ],

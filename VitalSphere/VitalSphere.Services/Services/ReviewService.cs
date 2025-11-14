@@ -68,10 +68,11 @@ namespace VitalSphere.Services.Services
             {
                 Id = entity.Id,
                 UserId = entity.UserId,
-                UserName = $"{entity.User?.FirstName} {entity.User?.LastName}".Trim(),
+                UserFullName = $"{entity.User?.FirstName} {entity.User?.LastName}".Trim(),
                 AppointmentId = entity.AppointmentId,
                 WellnessServiceId = entity.Appointment?.WellnessServiceId ?? 0,
                 WellnessServiceName = entity.Appointment?.WellnessService?.Name ?? string.Empty,
+                WellnessServiceImage = entity.Appointment?.WellnessService?.Image,
                 Rating = entity.Rating,
                 Comment = entity.Comment,
                 CreatedAt = entity.CreatedAt

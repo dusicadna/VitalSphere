@@ -8,24 +8,24 @@ class Review {
   final int rating;
   final String? comment;
   final DateTime createdAt;
-  final int festivalId;
-  final String festivalTitle;
+  final int wellnessServiceId;
+  final String wellnessServiceName;
   final int userId;
-  final String username;
   final String userFullName;
-  final String? festivalLogo;
+  final int appointmentId;
+  final String? wellnessServiceImage;
 
   const Review({
     this.id = 0,
     this.rating = 0,
     this.comment,
     required this.createdAt,
-    this.festivalId = 0,
-    this.festivalTitle = '',
+    this.wellnessServiceId = 0,
+    this.wellnessServiceName = '',
     this.userId = 0,
-    this.username = '',
     this.userFullName = '',
-    this.festivalLogo,
+    this.appointmentId = 0,
+    this.wellnessServiceImage,
   });
 
   factory Review.fromJson(Map<String, dynamic> json) => _$ReviewFromJson(json);
