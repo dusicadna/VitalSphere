@@ -206,11 +206,14 @@ class _LoginPageState extends State<LoginPage>
                                       ),
                                     ],
                                   ),
-                                  child: Image.asset(
-                                    "assets/images/logo_small.png",
-                                    height: 120,
-                                    width: 120,
-                                  ),
+                                  child: ClipRRect(
+  borderRadius: BorderRadius.circular(12), // adjust radius
+  child: Image.asset(
+    'assets/images/logo_small.png',
+    width: 140,
+    height: 140,
+  ),
+),
                                 ),
                               );
                             },

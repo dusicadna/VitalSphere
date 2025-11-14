@@ -49,7 +49,7 @@ class _MasterScreenState extends State<MasterScreen>
 
   Widget _buildUserAvatar() {
     final user = UserProvider.currentUser;
-    final double radius = 20;
+    final double radius = 22;
     ImageProvider? imageProvider;
     if (user?.picture != null && (user!.picture!.isNotEmpty)) {
       try {
@@ -95,7 +95,7 @@ class _MasterScreenState extends State<MasterScreen>
       barrierDismissible: true,
       barrierLabel: 'Profile',
       barrierColor: Colors.black54.withOpacity(0.2),
-      transitionDuration: const Duration(milliseconds: 250),
+      transitionDuration: const Duration(milliseconds: 320),
       pageBuilder: (_, __, ___) => const SizedBox.shrink(),
       transitionBuilder: (context, animation, secondaryAnimation, child) {
         final curved = CurvedAnimation(
@@ -112,129 +112,12 @@ class _MasterScreenState extends State<MasterScreen>
               ),
               child: FadeTransition(
                 opacity: curved,
-                child: ScaleTransition(
-                  scale: Tween<double>(begin: 0.9, end: 1.0).animate(curved),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Container(
-                      width: 300,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: 48,
-                                  height: 48,
-                                  child: _buildUserAvatar(),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        user != null
-                                            ? '${user.firstName} ${user.lastName}'
-                                            : 'Guest',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w700,
-                                          color: Color(0xFF1F2937),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        user?.username ?? '-',
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.grey[600],
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).maybePop(),
-                                  icon: const Icon(
-                                    Icons.close_rounded,
-                                    size: 20,
-                                  ),
-                                  color: Colors.grey[700],
-                                  tooltip: 'Close',
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
-                            const Divider(height: 1),
-                            const SizedBox(height: 12),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.email_outlined,
-                                  size: 18,
-                                  color: Color(0xFF2F855A),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    user != null
-                                        ? 'Email: ${user.email}'
-                                        : 'Email: -',
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      color: Color(0xFF374151),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.location_city_outlined,
-                                  size: 18,
-                                  color: Color(0xFF2F855A),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    user != null
-                                        ? 'City: ${user.cityName}'
-                                        : 'City: -',
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      color: Color(0xFF374151),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 4),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                child: SlideTransition(
+                  position: Tween<Offset>(
+                    begin: const Offset(0.05, -0.05),
+                    end: Offset.zero,
+                  ).animate(curved),
+                  child: _ProfileOverlayCard(user: user),
                 ),
               ),
             ),
@@ -521,6 +404,311 @@ class _MasterScreenState extends State<MasterScreen>
           _modernLogoutTile(context),
         ],
       ),
+    );
+  }
+}
+
+class _ProfileOverlayCard extends StatelessWidget {
+  const _ProfileOverlayCard({required this.user});
+
+  final dynamic user;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        width: 320,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 24,
+              offset: const Offset(0, 10),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      primary.withOpacity(0.15),
+                      primary.withOpacity(0.05),
+                    ],
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    _ProfileAvatarLarge(user: user, primary: primary),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            user != null
+                                ? '${user.firstName} ${user.lastName}'
+                                : 'Guest',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: const Color(0xFF1F2937),
+                            ),
+                          ),
+                          Text(
+                            user?.username ?? '-',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: primary.withOpacity(0.08),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.verified_user,
+                                    size: 16, color: primary),
+                                const SizedBox(width: 6),
+                                Text(
+                                  'Administrator',
+                                  style: theme.textTheme.labelMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: primary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.of(context).maybePop(),
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        size: 20,
+                      ),
+                      color: Colors.grey[600],
+                      tooltip: 'Close',
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                child: Column(
+                  children: [
+                    _InfoRow(
+                      icon: Icons.email_outlined,
+                      label: 'Email',
+                      value: user?.email ?? '-',
+                    ),
+                    const SizedBox(height: 12),
+                    _InfoRow(
+                      icon: Icons.phone_outlined,
+                      label: 'Phone',
+                      value: user?.phoneNumber ?? 'Not provided',
+                    ),
+                    const SizedBox(height: 12),
+                    _InfoRow(
+                      icon: Icons.calendar_today_outlined,
+                      label: 'Member since',
+                      value: user?.createdAt != null
+                          ? _formatDate(user!.createdAt)
+                          : 'Unknown',
+                    ),
+                  ],
+                ),
+              ),
+          
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  }
+}
+
+class _ProfileAvatarLarge extends StatelessWidget {
+  const _ProfileAvatarLarge({required this.user, required this.primary});
+
+  final dynamic user;
+  final Color primary;
+
+  @override
+  Widget build(BuildContext context) {
+    final double size = 66;
+    ImageProvider? imageProvider;
+
+    if (user?.picture != null && (user!.picture!.isNotEmpty)) {
+      try {
+        final sanitized = user.picture!.replaceAll(
+          RegExp(r'^data:image/[^;]+;base64,'),
+          '',
+        );
+        final bytes = base64Decode(sanitized);
+        imageProvider = MemoryImage(bytes);
+      } catch (_) {
+        imageProvider = null;
+      }
+    }
+
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            primary.withOpacity(0.4),
+            primary.withOpacity(0.2),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: imageProvider != null
+                  ? Image(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      color: primary,
+                      alignment: Alignment.center,
+                      child: Text(
+                        _initials,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+            ),
+          ),
+          Positioned(
+            bottom: -6,
+            right: -6,
+            child: Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(999),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
+                  )
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.shield_moon, size: 14, color: primary),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Active',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String get _initials {
+    final f = (user?.firstName ?? '').trim();
+    final l = (user?.lastName ?? '').trim();
+    if (f.isEmpty && l.isEmpty) return 'U';
+    final a = f.isNotEmpty ? f[0] : '';
+    final b = l.isNotEmpty ? l[0] : '';
+    return (a + b).toUpperCase();
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 18, color: const Color(0xFF2F855A)),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                value,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: const Color(0xFF1F2937),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
