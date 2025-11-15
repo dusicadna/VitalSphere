@@ -1,6 +1,6 @@
 {
-    "name": "manifest_desktop",
-    "short_name": "manifest_desktop",
+    "name": "VitalSphere Desktop",
+    "short_name": "VitalSphere",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

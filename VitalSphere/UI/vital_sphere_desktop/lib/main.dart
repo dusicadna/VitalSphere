@@ -6,6 +6,7 @@ import 'package:vital_sphere_desktop/providers/product_category_provider.dart';
 import 'package:vital_sphere_desktop/providers/brand_provider.dart';
 import 'package:vital_sphere_desktop/providers/wellness_service_category_provider.dart';
 import 'package:vital_sphere_desktop/providers/wellness_service_provider.dart';
+import 'package:vital_sphere_desktop/providers/wellness_box_provider.dart';
 import 'package:vital_sphere_desktop/providers/product_provider.dart';
 import 'package:vital_sphere_desktop/providers/user_provider.dart';
 import 'package:vital_sphere_desktop/providers/gender_provider.dart';
@@ -46,6 +47,9 @@ void main() async {
         ),
         ChangeNotifierProvider<WellnessServiceProvider>(
           create: (context) => WellnessServiceProvider(),
+        ),
+        ChangeNotifierProvider<WellnessBoxProvider>(
+          create: (context) => WellnessBoxProvider(),
         ),
         ChangeNotifierProvider<ProductProvider>(
           create: (context) => ProductProvider(),

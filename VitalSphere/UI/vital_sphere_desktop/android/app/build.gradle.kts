@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.manifest_desktop"
+    namespace = "com.example.vital_sphere_desktop"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
