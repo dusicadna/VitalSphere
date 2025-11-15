@@ -347,3 +347,4 @@ class WellnessServiceDetailsScreen extends StatelessWidget {
   }
 }
 
+

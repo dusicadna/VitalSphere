@@ -8,6 +8,5 @@ namespace VitalSphere.Model.SearchObjects
         public bool? IsActive { get; set; }
         public DateTime? CreatedFrom { get; set; }
         public DateTime? CreatedTo { get; set; }
-        public string? FTS { get; set; } // Full text search for user info
     }
 }

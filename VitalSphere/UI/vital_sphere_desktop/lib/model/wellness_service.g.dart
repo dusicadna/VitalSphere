@@ -38,3 +38,4 @@ Map<String, dynamic> _$WellnessServiceToJson(WellnessService instance) =>
       'wellnessServiceCategoryName': instance.wellnessServiceCategoryName,
     };
 
+

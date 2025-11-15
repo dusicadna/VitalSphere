@@ -33,3 +33,4 @@ class WellnessService {
   Map<String, dynamic> toJson() => _$WellnessServiceToJson(this);
 }
 
+

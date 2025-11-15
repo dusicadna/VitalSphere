@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:vital_sphere_desktop/providers/auth_provider.dart';
 import 'package:vital_sphere_desktop/providers/city_provider.dart';
-import 'package:vital_sphere_desktop/providers/country_provider.dart';
 import 'package:vital_sphere_desktop/providers/category_provider.dart';
 import 'package:vital_sphere_desktop/providers/product_category_provider.dart';
 import 'package:vital_sphere_desktop/providers/brand_provider.dart';
 import 'package:vital_sphere_desktop/providers/wellness_service_category_provider.dart';
 import 'package:vital_sphere_desktop/providers/wellness_service_provider.dart';
 import 'package:vital_sphere_desktop/providers/product_provider.dart';
-import 'package:vital_sphere_desktop/providers/subcategory_provider.dart';
 import 'package:vital_sphere_desktop/providers/user_provider.dart';
-import 'package:vital_sphere_desktop/providers/organizer_provider.dart';
-import 'package:vital_sphere_desktop/providers/ticket_type_provider.dart';
 import 'package:vital_sphere_desktop/providers/gender_provider.dart';
-import 'package:vital_sphere_desktop/providers/festival_provider.dart';
-import 'package:vital_sphere_desktop/providers/asset_provider.dart';
 import 'package:vital_sphere_desktop/providers/review_provider.dart';
-import 'package:vital_sphere_desktop/providers/ticket_provider.dart';
-import 'package:vital_sphere_desktop/providers/business_report_provider.dart';
-import 'package:vital_sphere_desktop/screens/business_report_screen.dart';
 import 'package:vital_sphere_desktop/screens/city_list_screen.dart';
 import 'package:vital_sphere_desktop/utils/base_textfield.dart';
 import 'package:provider/provider.dart';
@@ -32,44 +23,17 @@ void main() async {
         ChangeNotifierProvider<CityProvider>(
           create: (context) => CityProvider(),
         ),
-        ChangeNotifierProvider<CountryProvider>(
-          create: (context) => CountryProvider(),
-        ),
         ChangeNotifierProvider<CategoryProvider>(
           create: (context) => CategoryProvider(),
-        ),
-        ChangeNotifierProvider<SubcategoryProvider>(
-          create: (context) => SubcategoryProvider(),
         ),
         ChangeNotifierProvider<UserProvider>(
           create: (context) => UserProvider(),
         ),
-        ChangeNotifierProvider<OrganizerProvider>(
-          create: (context) => OrganizerProvider(),
-        ),
-        ChangeNotifierProvider<TicketTypeProvider>(
-          create: (context) => TicketTypeProvider(),
-        ),
         ChangeNotifierProvider<GenderProvider>(
           create: (context) => GenderProvider(),
         ),
-        ChangeNotifierProvider<FestivalProvider>(
-          create: (context) => FestivalProvider(),
-        ),
-        ChangeNotifierProvider<AssetProvider>(
-          create: (context) => AssetProvider(),
-        ),
         ChangeNotifierProvider<ReviewProvider>(
           create: (context) => ReviewProvider(),
-        ),
-        ChangeNotifierProvider<TicketProvider>(
-          create: (context) => TicketProvider(),
-        ),
-        ChangeNotifierProvider<SubcategoryProvider>(
-          create: (context) => SubcategoryProvider(),
-        ),
-        ChangeNotifierProvider<BusinessReportProvider>(
-          create: (context) => BusinessReportProvider(),
         ),
         ChangeNotifierProvider<ProductCategoryProvider>(
           create: (context) => ProductCategoryProvider(),
@@ -99,7 +63,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'ManiFest',
+      title: 'VitalSphere',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF2F855A), // Calming green
