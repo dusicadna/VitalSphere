@@ -26,19 +26,14 @@ namespace VitalSphere.Services.Services
                          .Include(g => g.WellnessBox)
                          .Include(g => g.GiftStatus);
 
-            if (search.UserId.HasValue)
+            if (!string.IsNullOrEmpty(search.UserFullName))
             {
-                query = query.Where(g => g.UserId == search.UserId.Value);
+                query = query.Where(g => (g.User.FirstName + " " + g.User.LastName).Contains(search.UserFullName));
             }
 
-            if (search.WellnessBoxId.HasValue)
+            if (!string.IsNullOrEmpty(search.WellnessBoxName))
             {
-                query = query.Where(g => g.WellnessBoxId == search.WellnessBoxId.Value);
-            }
-
-            if (search.GiftStatusId.HasValue)
-            {
-                query = query.Where(g => g.GiftStatusId == search.GiftStatusId.Value);
+                query = query.Where(g => g.WellnessBox.Name.Contains(search.WellnessBoxName));
             }
 
             return query;
@@ -69,6 +64,7 @@ namespace VitalSphere.Services.Services
                 UserName = $"{entity.User?.FirstName} {entity.User?.LastName}".Trim(),
                 WellnessBoxId = entity.WellnessBoxId,
                 WellnessBoxName = entity.WellnessBox?.Name ?? string.Empty,
+                WellnessBoxImage = entity.WellnessBox?.Image,
                 GiftedAt = entity.GiftedAt,
                 GiftStatusId = entity.GiftStatusId,
                 GiftStatusName = entity.GiftStatus?.Name ?? string.Empty

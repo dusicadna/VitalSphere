@@ -10,6 +10,7 @@ import 'package:vital_sphere_desktop/screens/brand_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/wellness_service_category_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/wellness_service_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/wellness_box_list_screen.dart';
+import 'package:vital_sphere_desktop/screens/gift_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/product_list_screen.dart';
 import 'package:vital_sphere_desktop/providers/user_provider.dart';
 
@@ -449,6 +450,16 @@ class _MasterScreenState extends State<MasterScreen>
             ),
             const SizedBox(height: 16),
             
+            // Gifts tile (no section header)
+            _modernDrawerTile(
+              context,
+              icon: Icons.card_giftcard_outlined,
+              activeIcon: Icons.card_giftcard,
+              label: 'Gifts',
+              screen: const GiftListScreen(),
+            ),
+            const SizedBox(height: 16),
+            
             // Cities tile (no section header)
             _modernDrawerTile(
               context,
@@ -864,6 +875,10 @@ Widget _modernDrawerTile(
         currentRoute == 'WellnessBoxListScreen' ||
         currentRoute == 'WellnessBoxDetailsScreen' ||
         currentRoute == 'WellnessBoxEditScreen';
+  } else if (label == 'Gifts') {
+    isSelected =
+        currentRoute == 'GiftListScreen' ||
+        currentRoute == 'GiftDetailsScreen';
   }
 
   return Container(
