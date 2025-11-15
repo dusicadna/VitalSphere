@@ -134,7 +134,7 @@ class _CityListScreenState extends State<CityListScreen> {
           BaseTable(
             icon: Icons.location_city_outlined,
             title: "Cities",
-            width: 500,
+            width: 400,
             height: 423,
             columns: const [
               DataColumn(

@@ -1,30 +1,29 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:vital_sphere_desktop/layouts/master_screen.dart';
-import 'package:vital_sphere_desktop/model/wellness_service.dart';
+import 'package:vital_sphere_desktop/model/wellness_box.dart';
 import 'package:vital_sphere_desktop/model/search_result.dart';
-import 'package:vital_sphere_desktop/providers/wellness_service_provider.dart';
-import 'package:vital_sphere_desktop/screens/wellness_service_details_screen.dart';
-import 'package:vital_sphere_desktop/screens/wellness_service_edit_screen.dart';
+import 'package:vital_sphere_desktop/providers/wellness_box_provider.dart';
+import 'package:vital_sphere_desktop/screens/wellness_box_details_screen.dart';
+import 'package:vital_sphere_desktop/screens/wellness_box_edit_screen.dart';
 import 'package:vital_sphere_desktop/utils/base_table.dart';
 import 'package:vital_sphere_desktop/utils/base_pagination.dart';
 import 'package:vital_sphere_desktop/utils/base_textfield.dart';
 import 'package:provider/provider.dart';
 
-class WellnessServiceListScreen extends StatefulWidget {
-  const WellnessServiceListScreen({super.key});
+class WellnessBoxListScreen extends StatefulWidget {
+  const WellnessBoxListScreen({super.key});
 
   @override
-  State<WellnessServiceListScreen> createState() =>
-      _WellnessServiceListScreenState();
+  State<WellnessBoxListScreen> createState() => _WellnessBoxListScreenState();
 }
 
-class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
-  late WellnessServiceProvider wellnessServiceProvider;
+class _WellnessBoxListScreenState extends State<WellnessBoxListScreen> {
+  late WellnessBoxProvider wellnessBoxProvider;
   TextEditingController nameController = TextEditingController();
   bool? selectedIsActive;
 
-  SearchResult<WellnessService>? wellnessServices;
+  SearchResult<WellnessBox>? wellnessBoxes;
   int _currentPage = 0;
   int _pageSize = 5;
   final List<int> _pageSizeOptions = [5, 7, 10, 20, 50];
@@ -40,10 +39,10 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
       'includeTotalCount': true,
     };
     debugPrint(filter.toString());
-    var servicesResult = await wellnessServiceProvider.get(filter: filter);
-    debugPrint(servicesResult.items?.firstOrNull?.name);
+    var boxesResult = await wellnessBoxProvider.get(filter: filter);
+    debugPrint(boxesResult.items?.firstOrNull?.name);
     setState(() {
-      this.wellnessServices = servicesResult;
+      this.wellnessBoxes = boxesResult;
       _currentPage = pageToFetch;
       _pageSize = pageSizeToUse;
     });
@@ -53,7 +52,7 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      wellnessServiceProvider = context.read<WellnessServiceProvider>();
+      wellnessBoxProvider = context.read<WellnessBoxProvider>();
 
       await _performSearch(page: 0);
     });
@@ -67,7 +66,7 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
   @override
   Widget build(BuildContext context) {
     return MasterScreen(
-      title: "Wellness Services Management",
+      title: "Wellness Boxes Management",
       child: Center(
         child: Column(
           children: [
@@ -126,8 +125,8 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const WellnessServiceEditScreen(),
-                  settings: const RouteSettings(name: 'WellnessServiceEditScreen'),
+                  builder: (context) => const WellnessBoxEditScreen(),
+                  settings: const RouteSettings(name: 'WellnessBoxEditScreen'),
                 ),
               );
             },
@@ -136,7 +135,7 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
               foregroundColor: Colors.white,
             ),
             child: const Row(
-              children: [Icon(Icons.add), Text('Add Service')],
+              children: [Icon(Icons.add), Text('Add Box')],
             ),
           ),
         ],
@@ -145,10 +144,10 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
   }
 
   Widget _buildResultView() {
-    final isEmpty = wellnessServices == null ||
-        wellnessServices!.items == null ||
-        wellnessServices!.items!.isEmpty;
-    final int totalCount = wellnessServices?.totalCount ?? 0;
+    final isEmpty = wellnessBoxes == null ||
+        wellnessBoxes!.items == null ||
+        wellnessBoxes!.items!.isEmpty;
+    final int totalCount = wellnessBoxes?.totalCount ?? 0;
     final int totalPages = (totalCount / _pageSize).ceil();
     final bool isFirstPage = _currentPage == 0;
     final bool isLastPage =
@@ -157,17 +156,16 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
       child: Column(
         children: [
           BaseTable(
-            icon: Icons.spa_outlined,
-            title: "Wellness Services",
+            icon: Icons.inventory_2_outlined,
+            title: "Wellness Boxes",
             width: 1400,
             height: 423,
             columnWidths: [
               120,  // Image
-              300,  // Name
-              80,   // Price
-              120,  // Duration
-              200,  // Category
-              100,  // Status
+              250,  // Name
+              510,  // Description
+     
+              90,  // Status
               150,  // Actions
             ],
             columns: const [
@@ -185,22 +183,11 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
               ),
               DataColumn(
                 label: Text(
-                  "Price",
+                  "Description",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ),
-              DataColumn(
-                label: Text(
-                  "Duration",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-              ),
-              DataColumn(
-                label: Text(
-                  "Category",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-              ),
+       
               DataColumn(
                 label: Text(
                   "Active",
@@ -216,7 +203,7 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
             ],
             rows: isEmpty
                 ? []
-                : wellnessServices!.items!
+                : wellnessBoxes!.items!
                     .map(
                       (e) => DataRow(
                         cells: [
@@ -242,7 +229,7 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
                                           return Container(
                                             color: Colors.grey[200],
                                             child: Icon(
-                                              Icons.spa,
+                                              Icons.inventory_2,
                                               color: Colors.grey[400],
                                               size: 30,
                                             ),
@@ -259,7 +246,7 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Icon(
-                                      Icons.spa,
+                                      Icons.inventory_2,
                                       color: Colors.grey[400],
                                       size: 30,
                                     ),
@@ -270,24 +257,13 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
                           ),
                           DataCell(
                             Text(
-                              '\$${e.price.toStringAsFixed(2)}',
+                              e.description ?? '-',
                               style: const TextStyle(fontSize: 15),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          DataCell(
-                            Text(
-                              e.durationMinutes != null
-                                  ? '${e.durationMinutes} min'
-                                  : '-',
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                          ),
-                          DataCell(
-                            Text(
-                              e.wellnessServiceCategoryName,
-                              style: const TextStyle(fontSize: 15),
-                            ),
-                          ),
+             
                           DataCell(
                             Icon(
                               e.isActive
@@ -310,10 +286,9 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              WellnessServiceDetailsScreen(
-                                                  service: e),
+                                              WellnessBoxDetailsScreen(box: e),
                                           settings: const RouteSettings(
-                                            name: 'WellnessServiceDetailsScreen',
+                                            name: 'WellnessBoxDetailsScreen',
                                           ),
                                         ),
                                       );
@@ -340,10 +315,9 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              WellnessServiceEditScreen(
-                                                  service: e),
+                                              WellnessBoxEditScreen(box: e),
                                           settings: const RouteSettings(
-                                            name: 'WellnessServiceEditScreen',
+                                            name: 'WellnessBoxEditScreen',
                                           ),
                                         ),
                                       );
@@ -367,9 +341,9 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
                       ),
                     )
                     .toList(),
-            emptyIcon: Icons.spa,
-            emptyText: "No wellness services found.",
-            emptySubtext: "Try adjusting your search or add a new service.",
+            emptyIcon: Icons.inventory_2,
+            emptyText: "No wellness boxes found.",
+            emptySubtext: "Try adjusting your search or add a new box.",
           ),
           const SizedBox(height: 30),
           BasePagination(
@@ -395,6 +369,4 @@ class _WellnessServiceListScreenState extends State<WellnessServiceListScreen> {
     );
   }
 }
-
-
 

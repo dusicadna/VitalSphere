@@ -1,42 +1,33 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'wellness_service.dart';
+part of 'wellness_box.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-WellnessService _$WellnessServiceFromJson(Map<String, dynamic> json) =>
-    WellnessService(
+WellnessBox _$WellnessBoxFromJson(Map<String, dynamic> json) =>
+    WellnessBox(
       id: (json['id'] as num?)?.toInt() ?? 0,
       name: json['name'] as String? ?? '',
       description: json['description'] as String?,
       image: json['image'] as String?,
-      price: (json['price'] as num?)?.toDouble() ?? 0.0,
-      durationMinutes: (json['durationMinutes'] as num?)?.toInt(),
+      includedItems: json['includedItems'] as String?,
       isActive: json['isActive'] as bool? ?? true,
       createdAt: json['createdAt'] == null
           ? DateTime.now()
           : DateTime.parse(json['createdAt'] as String),
-      wellnessServiceCategoryId:
-          (json['wellnessServiceCategoryId'] as num?)?.toInt() ?? 0,
-      wellnessServiceCategoryName:
-          json['wellnessServiceCategoryName'] as String? ?? '',
     );
 
-Map<String, dynamic> _$WellnessServiceToJson(WellnessService instance) =>
+Map<String, dynamic> _$WellnessBoxToJson(WellnessBox instance) =>
     <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'description': instance.description,
       'image': instance.image,
-      'price': instance.price,
-      'durationMinutes': instance.durationMinutes,
+      'includedItems': instance.includedItems,
       'isActive': instance.isActive,
       'createdAt': instance.createdAt.toIso8601String(),
-      'wellnessServiceCategoryId': instance.wellnessServiceCategoryId,
-      'wellnessServiceCategoryName': instance.wellnessServiceCategoryName,
     };
-
 
 
