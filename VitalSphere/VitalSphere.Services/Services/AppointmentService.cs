@@ -24,14 +24,14 @@ namespace VitalSphere.Services.Services
             query = query.Include(a => a.User)
                          .Include(a => a.WellnessService);
 
-            if (search.UserId.HasValue)
+            if (!string.IsNullOrEmpty(search.UserFullName))
             {
-                query = query.Where(a => a.UserId == search.UserId.Value);
+                query = query.Where(a => (a.User.FirstName + " " + a.User.LastName).Contains(search.UserFullName));
             }
 
-            if (search.WellnessServiceId.HasValue)
+            if (!string.IsNullOrEmpty(search.WellnessServiceName))
             {
-                query = query.Where(a => a.WellnessServiceId == search.WellnessServiceId.Value);
+                query = query.Where(a => a.WellnessService.Name.Contains(search.WellnessServiceName));
             }
 
             return query;
@@ -61,6 +61,7 @@ namespace VitalSphere.Services.Services
                 UserName = $"{entity.User?.FirstName} {entity.User?.LastName}".Trim(),
                 WellnessServiceId = entity.WellnessServiceId,
                 WellnessServiceName = entity.WellnessService?.Name ?? string.Empty,
+                WellnessServiceImage = entity.WellnessService?.Image,
                 ScheduledAt = entity.ScheduledAt,
                 Notes = entity.Notes,
                 CreatedAt = entity.CreatedAt

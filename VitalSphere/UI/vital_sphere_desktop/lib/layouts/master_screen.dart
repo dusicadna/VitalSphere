@@ -11,6 +11,7 @@ import 'package:vital_sphere_desktop/screens/wellness_service_category_list_scre
 import 'package:vital_sphere_desktop/screens/wellness_service_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/wellness_box_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/gift_list_screen.dart';
+import 'package:vital_sphere_desktop/screens/appointment_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/product_list_screen.dart';
 import 'package:vital_sphere_desktop/providers/user_provider.dart';
 
@@ -377,6 +378,14 @@ class _MasterScreenState extends State<MasterScreen>
             const SizedBox(height: 8),
             _modernDrawerTile(
               context,
+              icon: Icons.calendar_today_outlined,
+              activeIcon: Icons.calendar_today,
+              label: 'Appointments',
+              screen: const AppointmentListScreen(),
+            ),
+            const SizedBox(height: 16),
+            _modernDrawerTile(
+              context,
               icon: Icons.spa_outlined,
               activeIcon: Icons.spa,
               label: 'Wellness Services',
@@ -397,6 +406,14 @@ class _MasterScreenState extends State<MasterScreen>
               activeIcon: Icons.inventory_2,
               label: 'Wellness Boxes',
               screen: const WellnessBoxListScreen(),
+            ),
+            const SizedBox(height: 16),
+            _modernDrawerTile(
+              context,
+              icon: Icons.card_giftcard_outlined,
+              activeIcon: Icons.card_giftcard,
+              label: 'Gifts',
+              screen: const GiftListScreen(),
             ),
             const SizedBox(height: 24),
             
@@ -447,16 +464,6 @@ class _MasterScreenState extends State<MasterScreen>
               activeIcon: Icons.rate_review,
               label: 'Reviews',
               screen: ReviewListScreen(),
-            ),
-            const SizedBox(height: 16),
-            
-            // Gifts tile (no section header)
-            _modernDrawerTile(
-              context,
-              icon: Icons.card_giftcard_outlined,
-              activeIcon: Icons.card_giftcard,
-              label: 'Gifts',
-              screen: const GiftListScreen(),
             ),
             const SizedBox(height: 16),
             
@@ -879,6 +886,10 @@ Widget _modernDrawerTile(
     isSelected =
         currentRoute == 'GiftListScreen' ||
         currentRoute == 'GiftDetailsScreen';
+  } else if (label == 'Appointments') {
+    isSelected =
+        currentRoute == 'AppointmentListScreen' ||
+        currentRoute == 'AppointmentDetailsScreen';
   }
 
   return Container(
