@@ -573,7 +573,7 @@ namespace VitalSphere.Services.Database
                     Id = 1,
                     UserId = 2, // Adna
                     WellnessBoxId = 1,
-                    GiftStatusId = 2,
+                    GiftStatusId = 1,
                     GiftedAt = fixedDate.AddDays(-20)
                     
                 }

@@ -12,3 +12,4 @@ class WellnessServiceProvider extends BaseProvider<WellnessService> {
 
 
 
+

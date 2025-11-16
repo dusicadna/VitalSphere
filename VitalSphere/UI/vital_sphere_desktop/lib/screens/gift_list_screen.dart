@@ -287,44 +287,90 @@ Widget _buildSearch() {
                               _formatDate(e.giftedAt),
                               style: const TextStyle(fontSize: 15),
                             ),
-                          ),
-                           DataCell(
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
+                            ),
+                          DataCell(
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Details button
+                                Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(20),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              GiftDetailsScreen(gift: e),
+                                          settings: const RouteSettings(
+                                            name: 'GiftDetailsScreen',
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      width: 40,
+                                      height: 40,
+                                      alignment: Alignment.center,
+                                      child: const Icon(
+                                        Icons.info_outline,
+                                        color: Color(0xFF3182CE), // Info Blue
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                // Pick up button - only show for "Earned" status
+                                if (e.giftStatusName.toLowerCase() == 'earned') ...[
+                                  const SizedBox(width: 4),
                                   Material(
                                     color: Colors.transparent,
                                     child: InkWell(
                                       borderRadius: BorderRadius.circular(20),
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                GiftDetailsScreen(gift: e),
-                                            settings: const RouteSettings(
-                                              name: 'GiftDetailsScreen',
+                                      onTap: () async {
+                                        try {
+                                          await giftProvider.markAsPickedUp(e.id);
+                                          if (!mounted) return;
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                  'Gift marked as picked up.'),
+                                              backgroundColor: Colors.green,
                                             ),
-                                          ),
-                                        );
+                                          );
+                                          await _performSearch(page: _currentPage);
+                                        } catch (err) {
+                                          if (!mounted) return;
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                'Failed to mark gift as picked up: $err',
+                                              ),
+                                            ),
+                                          );
+                                        }
                                       },
                                       child: Container(
                                         width: 40,
                                         height: 40,
                                         alignment: Alignment.center,
                                         child: const Icon(
-                                          Icons.info_outline,
-                                          color: Color(0xFF3182CE), // Info Blue
+                                          Icons.check_circle_outline,
+                                          color: Color(0xFF38A169), // Success Green
                                           size: 20,
                                         ),
                                       ),
                                     ),
                                   ),
                                 ],
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
+                      ),
                     )
                     .toList(),
             emptyIcon: Icons.card_giftcard,
@@ -357,6 +403,10 @@ Widget _buildSearch() {
 
   Color _getStatusColor(String statusName) {
     switch (statusName.toLowerCase()) {
+      case 'earned':
+        return Colors.blue; // Blue for earned gifts
+      case 'picked up':
+        return Colors.green; // Green for picked up gifts
       case 'pending':
         return Colors.orange;
       case 'sent':
@@ -365,7 +415,7 @@ Widget _buildSearch() {
       case 'cancelled':
         return Colors.red;
       default:
-        return Colors.blue;
+        return Colors.grey;
     }
   }
 
