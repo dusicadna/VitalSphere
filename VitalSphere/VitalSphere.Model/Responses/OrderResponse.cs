@@ -11,6 +11,7 @@ namespace VitalSphere.Model.Responses
         public bool IsActive { get; set; }
         public int UserId { get; set; }
         public string UserFullName { get; set; } = string.Empty;
+        public byte[]? UserImage { get; set; }
         public List<OrderItemResponse> OrderItems { get; set; } = new List<OrderItemResponse>();
         public int TotalItems => OrderItems.Count;
     }

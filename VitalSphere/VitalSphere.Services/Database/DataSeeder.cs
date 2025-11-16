@@ -66,7 +66,7 @@ namespace VitalSphere.Services.Database
                     IsActive = true,
                     CreatedAt = fixedDate,
                     PhoneNumber = DefaultPhoneNumber,
-                    GenderId = 1, // Male
+                    GenderId = 2, // Female
                     CityId = 5, // Mostar
                     Picture = ImageConversion.ConvertImageToByteArray("Assets", "adna.png")
                 },
@@ -98,7 +98,7 @@ namespace VitalSphere.Services.Database
                     IsActive = true,
                     CreatedAt = fixedDate,
                     PhoneNumber = DefaultPhoneNumber,
-                    GenderId = 2, // Female
+                    GenderId = 1, // Male
                     CityId = 1, // Sarajevo
                     Picture = ImageConversion.ConvertImageToByteArray("Assets", "amel.png")
                 }

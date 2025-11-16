@@ -40,6 +40,7 @@ namespace VitalSphere.Services.Services
                 IsActive = entity.IsActive,
                 UserId = entity.UserId,
                 UserFullName = $"{entity.User?.FirstName} {entity.User?.LastName}".Trim(),
+                UserImage = entity.User?.Picture,
                 OrderItems = orderItems
             };
         }
