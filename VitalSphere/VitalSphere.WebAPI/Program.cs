@@ -31,6 +31,7 @@ builder.Services.AddTransient<IWellnessServiceCategoryService, WellnessServiceCa
 builder.Services.AddTransient<IWellnessServiceService, WellnessServiceService>();
 builder.Services.AddTransient<IAppointmentService, AppointmentService>();
 builder.Services.AddTransient<IReviewService, ReviewService>();
+builder.Services.AddTransient<IBusinessReportService, BusinessReportService>();
 
 // Configure database
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=.;Database=VitalSphereDb;User Id=sa;Password=QWEasd123!;TrustServerCertificate=True;Trusted_Connection=True;";
