@@ -7,64 +7,111 @@ part of 'business_report.dart';
 // **************************************************************************
 
 BusinessReportResponse _$BusinessReportResponseFromJson(
-  Map<String, dynamic> json,
-) => BusinessReportResponse(
-  topGrossingFestivals: (json['topGrossingFestivals'] as List<dynamic>)
-      .map((e) => FestivalRevenueResponse.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  totalRevenueThisYear: (json['totalRevenueThisYear'] as num).toDouble(),
-  totalTicketsSoldThisYear: (json['totalTicketsSoldThisYear'] as num).toInt(),
-  userWithMostTickets: json['userWithMostTickets'] == null
-      ? null
-      : User.fromJson(json['userWithMostTickets'] as Map<String, dynamic>),
-  userWithMostTicketsCount: (json['userWithMostTicketsCount'] as num?)?.toInt(),
-  topFestivalsByAverageRating:
-      (json['topFestivalsByAverageRating'] as List<dynamic>)
-          .map(
-            (e) => FestivalRatingResponse.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
-);
+        Map<String, dynamic> json) =>
+    BusinessReportResponse(
+      top3SoldProducts: (json['top3SoldProducts'] as List<dynamic>?)
+              ?.map((e) => TopProductResponse.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      top3ServicesUsed: (json['top3ServicesUsed'] as List<dynamic>?)
+              ?.map((e) => TopServiceResponse.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      moneyGeneratedFromProducts:
+          (json['moneyGeneratedFromProducts'] as num?)?.toDouble() ?? 0.0,
+      moneyGeneratedFromServices:
+          (json['moneyGeneratedFromServices'] as num?)?.toDouble() ?? 0.0,
+      bestReviewedService: json['bestReviewedService'] == null
+          ? null
+          : BestReviewedServiceResponse.fromJson(
+              json['bestReviewedService'] as Map<String, dynamic>),
+      userWithMostServices: json['userWithMostServices'] == null
+          ? null
+          : UserWithMostServicesResponse.fromJson(
+              json['userWithMostServices'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$BusinessReportResponseToJson(
-  BusinessReportResponse instance,
-) => <String, dynamic>{
-  'topGrossingFestivals': instance.topGrossingFestivals,
-  'totalRevenueThisYear': instance.totalRevenueThisYear,
-  'totalTicketsSoldThisYear': instance.totalTicketsSoldThisYear,
-  'userWithMostTickets': instance.userWithMostTickets,
-  'userWithMostTicketsCount': instance.userWithMostTicketsCount,
-  'topFestivalsByAverageRating': instance.topFestivalsByAverageRating,
-};
+        BusinessReportResponse instance) =>
+    <String, dynamic>{
+      'top3SoldProducts': instance.top3SoldProducts.map((e) => e.toJson()).toList(),
+      'top3ServicesUsed': instance.top3ServicesUsed.map((e) => e.toJson()).toList(),
+      'moneyGeneratedFromProducts': instance.moneyGeneratedFromProducts,
+      'moneyGeneratedFromServices': instance.moneyGeneratedFromServices,
+      'bestReviewedService': instance.bestReviewedService?.toJson(),
+      'userWithMostServices': instance.userWithMostServices?.toJson(),
+    };
 
-FestivalRevenueResponse _$FestivalRevenueResponseFromJson(
-  Map<String, dynamic> json,
-) => FestivalRevenueResponse(
-  festivalId: (json['festivalId'] as num).toInt(),
-  title: json['title'] as String,
-  totalRevenue: (json['totalRevenue'] as num).toDouble(),
-);
+TopProductResponse _$TopProductResponseFromJson(Map<String, dynamic> json) =>
+    TopProductResponse(
+      productId: (json['productId'] as num?)?.toInt() ?? 0,
+      productName: json['productName'] as String? ?? '',
+      productImage: json['productImage'] as String?,
+      totalQuantitySold: (json['totalQuantitySold'] as num?)?.toInt() ?? 0,
+      totalRevenue: (json['totalRevenue'] as num?)?.toDouble() ?? 0.0,
+    );
 
-Map<String, dynamic> _$FestivalRevenueResponseToJson(
-  FestivalRevenueResponse instance,
-) => <String, dynamic>{
-  'festivalId': instance.festivalId,
-  'title': instance.title,
-  'totalRevenue': instance.totalRevenue,
-};
+Map<String, dynamic> _$TopProductResponseToJson(TopProductResponse instance) =>
+    <String, dynamic>{
+      'productId': instance.productId,
+      'productName': instance.productName,
+      'productImage': instance.productImage,
+      'totalQuantitySold': instance.totalQuantitySold,
+      'totalRevenue': instance.totalRevenue,
+    };
 
-FestivalRatingResponse _$FestivalRatingResponseFromJson(
-  Map<String, dynamic> json,
-) => FestivalRatingResponse(
-  festivalId: (json['festivalId'] as num).toInt(),
-  title: json['title'] as String,
-  averageRating: (json['averageRating'] as num).toDouble(),
-);
+TopServiceResponse _$TopServiceResponseFromJson(Map<String, dynamic> json) =>
+    TopServiceResponse(
+      serviceId: (json['serviceId'] as num?)?.toInt() ?? 0,
+      serviceName: json['serviceName'] as String? ?? '',
+      serviceImage: json['serviceImage'] as String?,
+      totalAppointments: (json['totalAppointments'] as num?)?.toInt() ?? 0,
+      totalRevenue: (json['totalRevenue'] as num?)?.toDouble() ?? 0.0,
+    );
 
-Map<String, dynamic> _$FestivalRatingResponseToJson(
-  FestivalRatingResponse instance,
-) => <String, dynamic>{
-  'festivalId': instance.festivalId,
-  'title': instance.title,
-  'averageRating': instance.averageRating,
-};
+Map<String, dynamic> _$TopServiceResponseToJson(TopServiceResponse instance) =>
+    <String, dynamic>{
+      'serviceId': instance.serviceId,
+      'serviceName': instance.serviceName,
+      'serviceImage': instance.serviceImage,
+      'totalAppointments': instance.totalAppointments,
+      'totalRevenue': instance.totalRevenue,
+    };
+
+BestReviewedServiceResponse _$BestReviewedServiceResponseFromJson(
+        Map<String, dynamic> json) =>
+    BestReviewedServiceResponse(
+      serviceId: (json['serviceId'] as num?)?.toInt() ?? 0,
+      serviceName: json['serviceName'] as String? ?? '',
+      serviceImage: json['serviceImage'] as String?,
+      averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0.0,
+      reviewCount: (json['reviewCount'] as num?)?.toInt() ?? 0,
+    );
+
+Map<String, dynamic> _$BestReviewedServiceResponseToJson(
+        BestReviewedServiceResponse instance) =>
+    <String, dynamic>{
+      'serviceId': instance.serviceId,
+      'serviceName': instance.serviceName,
+      'serviceImage': instance.serviceImage,
+      'averageRating': instance.averageRating,
+      'reviewCount': instance.reviewCount,
+    };
+
+UserWithMostServicesResponse _$UserWithMostServicesResponseFromJson(
+        Map<String, dynamic> json) =>
+    UserWithMostServicesResponse(
+      userId: (json['userId'] as num?)?.toInt() ?? 0,
+      userFullName: json['userFullName'] as String? ?? '',
+      userImage: json['userImage'] as String?,
+      totalServicesCount: (json['totalServicesCount'] as num?)?.toInt() ?? 0,
+    );
+
+Map<String, dynamic> _$UserWithMostServicesResponseToJson(
+        UserWithMostServicesResponse instance) =>
+    <String, dynamic>{
+      'userId': instance.userId,
+      'userFullName': instance.userFullName,
+      'userImage': instance.userImage,
+      'totalServicesCount': instance.totalServicesCount,
+    };

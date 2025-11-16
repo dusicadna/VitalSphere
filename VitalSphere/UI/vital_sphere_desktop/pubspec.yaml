@@ -40,11 +40,6 @@ dependencies:
   intl: ^0.20.2
   form_builder_validators: ^11.2.0
   file_picker: ^8.3.7
-  flutter_map: ^6.1.0
-  latlong2: ^0.9.0
-  flutter_dotenv: ^5.1.0
-  carousel_slider: 4.1.1 # or the latest version
-  qr_flutter: ^4.1.0
   fl_chart: ^0.70.0
 
 

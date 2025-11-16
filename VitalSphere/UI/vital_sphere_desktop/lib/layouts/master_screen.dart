@@ -11,6 +11,7 @@ import 'package:vital_sphere_desktop/screens/wellness_service_category_list_scre
 import 'package:vital_sphere_desktop/screens/wellness_service_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/wellness_box_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/gift_list_screen.dart';
+import 'package:vital_sphere_desktop/screens/analytics_screen.dart';
 import 'package:vital_sphere_desktop/screens/appointment_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/order_list_screen.dart';
 import 'package:vital_sphere_desktop/screens/product_list_screen.dart';
@@ -374,6 +375,18 @@ class _MasterScreenState extends State<MasterScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Analytics Section
+            _buildSectionHeader('Analytics'),
+            const SizedBox(height: 8),
+            _modernDrawerTile(
+              context,
+              icon: Icons.analytics_outlined,
+              activeIcon: Icons.analytics,
+              label: 'Business Analytics',
+              screen: const AnalyticsScreen(),
+            ),
+            const SizedBox(height: 24),
+            
             // Wellness Section
             _buildSectionHeader('Wellness Section'),
             const SizedBox(height: 8),
@@ -903,6 +916,8 @@ Widget _modernDrawerTile(
     isSelected =
         currentRoute == 'AppointmentListScreen' ||
         currentRoute == 'AppointmentDetailsScreen';
+  } else if (label == 'Business Analytics') {
+    isSelected = currentRoute == 'AnalyticsScreen';
   }
 
   return Container(
