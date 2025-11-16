@@ -385,7 +385,7 @@ class _MasterScreenState extends State<MasterScreen>
               label: 'Business Analytics',
               screen: const AnalyticsScreen(),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 5),
             
             // Wellness Section
             _buildSectionHeader('Wellness Section'),
@@ -397,7 +397,7 @@ class _MasterScreenState extends State<MasterScreen>
               label: 'Appointments',
               screen: const AppointmentListScreen(),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 5),
             _modernDrawerTile(
               context,
               icon: Icons.spa_outlined,
@@ -405,7 +405,7 @@ class _MasterScreenState extends State<MasterScreen>
               label: 'Wellness Services',
               screen: const WellnessServiceListScreen(),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 5),
             _modernDrawerTile(
               context,
               icon: Icons.category_outlined,
@@ -413,7 +413,7 @@ class _MasterScreenState extends State<MasterScreen>
               label: 'Wellness Categories',
               screen: const WellnessServiceCategoryListScreen(),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 5),
             _modernDrawerTile(
               context,
               icon: Icons.inventory_2_outlined,
@@ -421,7 +421,7 @@ class _MasterScreenState extends State<MasterScreen>
               label: 'Wellness Boxes',
               screen: const WellnessBoxListScreen(),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 5),
             _modernDrawerTile(
               context,
               icon: Icons.card_giftcard_outlined,
@@ -429,7 +429,7 @@ class _MasterScreenState extends State<MasterScreen>
               label: 'Gifts',
               screen: const GiftListScreen(),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 5),
             
             // Product Section
             _buildSectionHeader('Product Section'),
@@ -441,7 +441,7 @@ class _MasterScreenState extends State<MasterScreen>
               label: 'Orders',
               screen: const OrderListScreen(),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 5),
             _modernDrawerTile(
               context,
               icon: Icons.shopping_bag_outlined,
@@ -449,7 +449,7 @@ class _MasterScreenState extends State<MasterScreen>
               label: 'Products',
               screen: const ProductListScreen(),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 5),
             _modernDrawerTile(
               context,
               icon: Icons.category_outlined,
@@ -457,7 +457,7 @@ class _MasterScreenState extends State<MasterScreen>
               label: 'Product Categories',
               screen: const ProductCategoryListScreen(),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 5),
             _modernDrawerTile(
               context,
               icon: Icons.branding_watermark_outlined,
@@ -465,7 +465,7 @@ class _MasterScreenState extends State<MasterScreen>
               label: 'Brands',
               screen: const BrandListScreen(),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 5),
             
             // User Section
             _buildSectionHeader('User Section'),
@@ -477,7 +477,7 @@ class _MasterScreenState extends State<MasterScreen>
               label: 'Users',
               screen: const UsersListScreen(),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 5),
             
             // Reviews tile (no section header)
             _modernDrawerTile(
@@ -487,7 +487,7 @@ class _MasterScreenState extends State<MasterScreen>
               label: 'Reviews',
               screen: ReviewListScreen(),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 5),
             
             // Cities tile (no section header)
             _modernDrawerTile(
