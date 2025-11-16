@@ -14,6 +14,9 @@ class AnalyticsScreen extends StatefulWidget {
 }
 
 class _AnalyticsScreenState extends State<AnalyticsScreen> {
+  int _currentViewIndex = 0; // 0 = Revenue, 1 = Reviews/Customer
+  int _previousViewIndex = 0; // Track previous index for transition direction
+
   @override
   void initState() {
     super.initState();
@@ -64,8 +67,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Revenue Cards
-                _buildRevenueSection(report),
+                // Revenue Cards with Navigation
+                _buildRevenueSectionWithNavigation(report),
                 const SizedBox(height: 24),
 
                 // Pie Charts Row
@@ -83,27 +86,102 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Best Reviewed Service and Top User
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (report.bestReviewedService != null)
-                      Expanded(
-                        child: _buildBestReviewedService(report.bestReviewedService!),
-                      ),
-                    if (report.bestReviewedService != null &&
-                        report.userWithMostServices != null)
-                      const SizedBox(width: 16),
-                    if (report.userWithMostServices != null)
-                      Expanded(
-                        child: _buildTopUser(report.userWithMostServices!),
-                      ),
-                  ],
-                ),
               ],
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildRevenueSectionWithNavigation(BusinessReportResponse report) {
+    return Row(
+      children: [
+        // Left Navigation Button (always visible, toggles view)
+        _buildNavToggleButton(isLeft: true),
+        const SizedBox(width: 8),
+        // Content with transition and fixed height so both views share same space
+        Expanded(
+          child: SizedBox(
+            height: 220,
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 500),
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                // Determine slide direction based on previous and current index
+                final bool isSlidingLeft =
+                    _previousViewIndex < _currentViewIndex;
+                return SlideTransition(
+                  position: Tween<Offset>(
+                    begin: Offset(isSlidingLeft ? 0.1 : -0.1, 0),
+                    end: Offset.zero,
+                  ).animate(
+                    CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeInOutCubic,
+                    ),
+                  ),
+                  child: FadeTransition(
+                    opacity: CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeInOut,
+                    ),
+                    child: ScaleTransition(
+                      scale: Tween<double>(
+                        begin: 0.95,
+                        end: 1.0,
+                      ).animate(
+                        CurvedAnimation(
+                          parent: animation,
+                          curve: Curves.easeOutCubic,
+                        ),
+                      ),
+                      child: child,
+                    ),
+                  ),
+                );
+              },
+              child: _currentViewIndex == 0
+                  ? _buildRevenueSection(report)
+                  : _buildReviewsAndCustomerSection(report),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        // Right Navigation Button (always visible, toggles view)
+        _buildNavToggleButton(isLeft: false),
+      ],
+    );
+  }
+
+  Widget _buildNavToggleButton({required bool isLeft}) {
+    final bool isRevenueView = _currentViewIndex == 0;
+    final Color activeColor = Colors.grey[700]!;
+    final Color inactiveColor = Colors.grey[400]!;
+
+    return SizedBox(
+      width: 44,
+      height: 44,
+      child: Material(
+        color: Colors.grey[100],
+        shape: const CircleBorder(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: () {
+            setState(() {
+              _previousViewIndex = _currentViewIndex;
+              _currentViewIndex = isRevenueView ? 1 : 0;
+            });
+          },
+          child: Center(
+            child: Icon(
+              isLeft ? Icons.arrow_back_ios_new : Icons.arrow_forward_ios,
+              size: 18,
+              color: (isLeft && isRevenueView) || (!isLeft && !isRevenueView)
+                  ? inactiveColor
+                  : activeColor,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -113,6 +191,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         report.moneyGeneratedFromProducts + report.moneyGeneratedFromServices;
 
     return Row(
+      key: const ValueKey('revenue'),
       children: [
         Expanded(
           child: _buildRevenueCard(
@@ -128,6 +207,16 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         const SizedBox(width: 16),
         Expanded(
           child: _buildRevenueCard(
+            'Total Revenue',
+            totalRevenue,
+            Icons.attach_money,
+            const Color(0xFF805AD5),
+            100,
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: _buildRevenueCard(
             'Services Revenue',
             report.moneyGeneratedFromServices,
             Icons.spa,
@@ -137,16 +226,30 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 : 0,
           ),
         ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: _buildRevenueCard(
-            'Total Revenue',
-            totalRevenue,
-            Icons.attach_money,
-            const Color(0xFF805AD5),
-            100,
+      ],
+    );
+  }
+
+  Widget _buildReviewsAndCustomerSection(BusinessReportResponse report) {
+    return Row(
+      key: const ValueKey('reviews'),
+      children: [
+        if (report.bestReviewedService != null)
+          Expanded(
+            child: _buildBestReviewedService(report.bestReviewedService!),
           ),
-        ),
+        if (report.bestReviewedService != null &&
+            report.userWithMostServices != null)
+          const SizedBox(width: 16),
+        if (report.userWithMostServices != null)
+          Expanded(
+            child: _buildTopUser(report.userWithMostServices!),
+          ),
+        // If only one card exists, add a spacer to maintain height
+        if (report.bestReviewedService == null || report.userWithMostServices == null)
+          Expanded(
+            child: Container(),
+          ),
       ],
     );
   }
@@ -506,6 +609,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
+        height: 200, // Fixed height to match revenue cards
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
@@ -520,6 +624,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [
@@ -628,6 +733,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
+        height: 200, // Fixed height to match revenue cards
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
@@ -642,6 +748,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
               children: [

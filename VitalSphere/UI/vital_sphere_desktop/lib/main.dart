@@ -15,6 +15,7 @@ import 'package:vital_sphere_desktop/providers/user_provider.dart';
 import 'package:vital_sphere_desktop/providers/gender_provider.dart';
 import 'package:vital_sphere_desktop/providers/review_provider.dart';
 import 'package:vital_sphere_desktop/providers/business_report_provider.dart';
+import 'package:vital_sphere_desktop/screens/analytics_screen.dart';
 import 'package:vital_sphere_desktop/screens/city_list_screen.dart';
 import 'package:vital_sphere_desktop/utils/base_textfield.dart';
 import 'package:provider/provider.dart';
@@ -375,8 +376,8 @@ class _LoginPageState extends State<LoginPage>
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const CityListScreen(),
-                settings: const RouteSettings(name: 'CityListScreen'),
+                builder: (context) => const AnalyticsScreen(),
+                settings: const RouteSettings(name: 'AnalyticsScreen'),
               ),
             );
           }
