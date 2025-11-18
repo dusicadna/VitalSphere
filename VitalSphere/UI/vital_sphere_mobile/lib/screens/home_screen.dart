@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vital_sphere_mobile/model/appointment.dart';
+import 'package:vital_sphere_mobile/model/wellness_service.dart';
 import 'package:vital_sphere_mobile/providers/appointment_provider.dart';
 import 'package:vital_sphere_mobile/providers/user_provider.dart';
+import 'package:vital_sphere_mobile/providers/wellness_service_provider.dart';
+import 'package:vital_sphere_mobile/screens/appointment_screen.dart';
 import 'package:vital_sphere_mobile/utils/base_picture_cover.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
@@ -22,6 +25,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<Appointment> _upcomingAppointments = [];
   Appointment? _nextAppointment;
+  WellnessService? _recommendedService;
   bool _isLoading = true;
   Timer? _countdownTimer;
   int _daysUntil = 0;
@@ -32,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadAppointments();
+    _loadRecommendation();
     _startCountdownTimer();
   }
 
@@ -136,6 +141,39 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _loadRecommendation() async {
+    if (!mounted) return;
+
+    final userId = UserProvider.currentUser?.id;
+    if (userId == null) return;
+
+    try {
+      final wellnessServiceProvider =
+          Provider.of<WellnessServiceProvider>(context, listen: false);
+      
+      final recommendation = await wellnessServiceProvider.getRecommendationForUser(userId);
+
+      if (mounted) {
+        setState(() {
+          _recommendedService = recommendation;
+        });
+      }
+    } catch (e) {
+      // Silently fail - recommendation is optional
+    }
+  }
+
+  void _handleRecommendedServiceTap() {
+    if (_recommendedService != null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AppointmentScreen(service: _recommendedService!),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -151,85 +189,15 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: SafeArea(
         child: RefreshIndicator(
-          onRefresh: _loadAppointments,
+          onRefresh: () async {
+            await _loadAppointments();
+            await _loadRecommendation();
+          },
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Welcome Section
-                Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color(0xFF163A2A),
-                        Color(0xFF20523A),
-                        Color(0xFF2F855A),
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFF2F855A).withOpacity(0.3),
-                        spreadRadius: 0,
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Icon(
-                              Icons.spa_rounded,
-                              color: Colors.white,
-                              size: 28,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          const Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Welcome to VitalSphere',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 0.3,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Your wellness journey starts here',
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-
                 // Countdown Section
                 if (_nextAppointment != null) ...[
                   _buildCountdownCard(),
@@ -327,6 +295,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: _buildServiceCard(appointment, isNext),
                     );
                   }),
+
+                // Recommended Service Section
+                if (_recommendedService != null) ...[
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Recommended for You',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1F2937),
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildRecommendedServiceCard(),
+                ],
               ],
             ),
           ),
@@ -574,6 +563,115 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRecommendedServiceCard() {
+    if (_recommendedService == null) return const SizedBox.shrink();
+
+    return InkWell(
+      onTap: _handleRecommendedServiceTap,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF2F855A),
+              Color(0xFF38A169),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF2F855A).withOpacity(0.3),
+              spreadRadius: 1,
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              // Service Image
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: BasePictureCover(
+                  base64: _recommendedService!.image,
+                  size: 80,
+                  fallbackIcon: Icons.spa_rounded,
+                  borderColor: Colors.white.withOpacity(0.3),
+                  iconColor: Colors.white,
+                  backgroundColor: Colors.white.withOpacity(0.2),
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Service Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Text(
+                        'Recommended',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _recommendedService!.name,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.star_rounded,
+                          size: 16,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Based on your preferences',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white.withOpacity(0.9),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -6,6 +6,7 @@ namespace VitalSphere.Services.Interfaces
 {
     public interface IWellnessServiceService : ICRUDService<WellnessServiceResponse, WellnessServiceSearchObject, WellnessServiceUpsertRequest, WellnessServiceUpsertRequest>
     {
+        WellnessServiceResponse RecommendForUser(int userId);
     }
 }
 
