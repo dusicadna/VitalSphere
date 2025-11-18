@@ -13,6 +13,7 @@ import 'package:vital_sphere_mobile/providers/product_category_provider.dart';
 import 'package:vital_sphere_mobile/providers/product_provider.dart';
 import 'package:vital_sphere_mobile/providers/review_provider.dart';
 import 'package:vital_sphere_mobile/providers/user_provider.dart';
+import 'package:vital_sphere_mobile/providers/order_provider.dart';
 import 'package:vital_sphere_mobile/screens/register_screen.dart';
 import 'package:vital_sphere_mobile/utils/base_textfield.dart';
 
@@ -37,6 +38,7 @@ void main() async {
         ChangeNotifierProvider<ProductCategoryProvider>(create: (_) => ProductCategoryProvider()),
         ChangeNotifierProvider<BrandProvider>(create: (_) => BrandProvider()),
         ChangeNotifierProvider<CartProvider>(create: (_) => CartProvider()),
+        ChangeNotifierProvider<OrderProvider>(create: (_) => OrderProvider()),
       ],
       child: const MyApp(),
     ),

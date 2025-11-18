@@ -4,7 +4,9 @@ import 'package:vital_sphere_mobile/providers/cart_provider.dart';
 import 'package:vital_sphere_mobile/providers/user_provider.dart';
 import 'package:vital_sphere_mobile/model/cart.dart';
 import 'package:vital_sphere_mobile/model/cart_item.dart';
+import 'package:vital_sphere_mobile/screens/product_list_screen.dart';
 import 'package:vital_sphere_mobile/utils/base_picture_cover.dart';
+import 'package:vital_sphere_mobile/screens/stripe_payment_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -391,7 +393,12 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               child: ElevatedButton.icon(
-                onPressed: () => Navigator.pop(context),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProductListScreen(),
+                  ),
+                ),
                 icon: const Icon(Icons.shopping_bag_rounded, size: 20),
                 label: const Text(
                   "Browse Products",
@@ -766,8 +773,12 @@ class _CartScreenState extends State<CartScreen> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // TODO: Implement checkout functionality
-                    _showSuccessSnackbar('Checkout functionality coming soon!');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StripePaymentScreen(cart: _cart!),
+                      ),
+                    ).then((_) => _loadCart()); // Reload cart when returning
                   },
                   icon: const Icon(Icons.shopping_cart_checkout_rounded, size: 22),
                   label: const Text(
