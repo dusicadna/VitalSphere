@@ -115,12 +115,12 @@ namespace VitalSphere.Services.Services
                 throw new InvalidOperationException("The appointment does not belong to the specified user.");
             }
 
-            if (appointment.Review != null)
-            {
-                throw new InvalidOperationException("This appointment already has a review.");
-            }
+            //if (appointment.Review != null)
+            //{
+            //    throw new InvalidOperationException("This appointment already has a review.");
+            //}
 
-            entity.CreatedAt = DateTime.UtcNow;
+            entity.CreatedAt = DateTime.Now;
         }
 
         protected override async Task BeforeUpdate(Review entity, ReviewUpsertRequest request)

@@ -393,15 +393,12 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ),
               child: ElevatedButton.icon(
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const ProductListScreen(),
-                  ),
-                ),
+                onPressed: () {
+                  Navigator.pop(context); // Go back to previous screen
+                },
                 icon: const Icon(Icons.shopping_bag_rounded, size: 20),
                 label: const Text(
-                  "Browse Products",
+                  "Back to Cart",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
