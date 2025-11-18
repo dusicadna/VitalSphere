@@ -1,4 +1,4 @@
-# manifest_mobile
+# vital_sphere_mobile
 
 A new Flutter project.
 

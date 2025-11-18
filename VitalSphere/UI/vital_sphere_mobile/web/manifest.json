@@ -1,6 +1,6 @@
 {
-    "name": "manifest_mobile",
-    "short_name": "manifest_mobile",
+    "name": "vital_sphere_mobile",
+    "short_name": "vital_sphere_mobile",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
