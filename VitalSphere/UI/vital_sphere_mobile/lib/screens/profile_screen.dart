@@ -29,8 +29,8 @@ class ProfileScreen extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              const Color(0xFF6A1B9A).withOpacity(0.1),
-              const Color(0xFF6A1B9A).withOpacity(0.05),
+              const Color(0xFFF8FAFC),
+              Colors.white,
             ],
           ),
         ),
@@ -38,14 +38,14 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.error_outline, size: 64, color: Color(0xFF6A1B9A)),
+              Icon(Icons.error_outline, size: 64, color: Color(0xFF2F855A)),
               SizedBox(height: 16),
               Text(
                 'No user data available',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF6A1B9A),
+                  color: Color(0xFF2F855A),
                 ),
               ),
             ],
@@ -60,8 +60,8 @@ class ProfileScreen extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color(0xFF6A1B9A).withOpacity(0.1),
-            const Color(0xFF6A1B9A).withOpacity(0.05),
+            const Color(0xFFF8FAFC),
+            Colors.white,
           ],
         ),
       ),
@@ -71,21 +71,25 @@ class ProfileScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 20),
 
-            // Profile Header Card
+            // Profile Header Card with Green Gradient
             Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [const Color(0xFF6A1B9A), const Color(0xFF8E24AA)],
+                  colors: [
+                    Color(0xFF163A2A),
+                    Color(0xFF20523A),
+                    Color(0xFF2F855A),
+                  ],
                 ),
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF6A1B9A).withOpacity(0.3),
-                    spreadRadius: 2,
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
+                    color: const Color(0xFF2F855A).withOpacity(0.3),
+                    spreadRadius: 0,
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
                   ),
                 ],
               ),
@@ -166,11 +170,11 @@ class ProfileScreen extends StatelessWidget {
                               children: [
                                 Icon(
                                   user.isActive
-                                      ? Icons.check_circle
-                                      : Icons.cancel,
+                                      ? Icons.check_circle_rounded
+                                      : Icons.cancel_rounded,
                                   color: user.isActive
-                                      ? Colors.green
-                                      : Colors.red,
+                                      ? const Color(0xFF48BB78)
+                                      : Colors.red[300],
                                   size: 20,
                                 ),
                                 const SizedBox(width: 8),
@@ -218,14 +222,14 @@ class ProfileScreen extends StatelessWidget {
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF6A1B9A).withOpacity(0.1),
+                            color: const Color(0xFFE8F5E9),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: const Icon(
-                            Icons.info_outline,
-                            color: Color(0xFF6A1B9A),
+                            Icons.info_outline_rounded,
+                            color: Color(0xFF2F855A),
                             size: 24,
                           ),
                         ),
@@ -235,7 +239,8 @@ class ProfileScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF6A1B9A),
+                            color: Color(0xFF1F2937),
+                            letterSpacing: -0.3,
                           ),
                         ),
                       ],
@@ -243,18 +248,18 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(height: 20),
 
                     // Information items
-                    _buildInfoTile(Icons.email, 'Email', user.email),
+                    _buildInfoTile(Icons.email_rounded, 'Email', user.email),
                     _buildInfoTile(
-                      Icons.phone,
+                      Icons.phone_rounded,
                       'Phone',
                       user.phoneNumber ?? 'Not provided',
                     ),
                     _buildInfoTile(
-                      Icons.person_outline,
+                      Icons.person_outline_rounded,
                       'Gender',
                       user.genderName,
                     ),
-                    _buildInfoTile(Icons.location_city, 'City', user.cityName),
+                    _buildInfoTile(Icons.location_city_rounded, 'City', user.cityName),
                   ],
                 ),
               ),
@@ -266,38 +271,52 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildInfoTile(IconData icon, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFFE8F5E9),
+          width: 1.5,
+        ),
+      ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFF6A1B9A).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
+              color: const Color(0xFFE8F5E9),
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(icon, size: 20, color: const Color(0xFF6A1B9A)),
+            child: Icon(
+              icon,
+              size: 22,
+              color: const Color(0xFF2F855A),
+            ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF6A1B9A),
+                    color: Colors.grey[600],
+                    letterSpacing: 0.3,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 4),
                 Text(
                   value,
                   style: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black87,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF1F2937),
                   ),
                 ),
               ],

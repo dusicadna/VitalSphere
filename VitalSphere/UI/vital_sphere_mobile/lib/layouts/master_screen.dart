@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vital_sphere_mobile/providers/user_provider.dart';
 import 'package:vital_sphere_mobile/screens/profile_screen.dart';
+import 'package:vital_sphere_mobile/screens/home_screen.dart';
 
 class CustomPageViewScrollPhysics extends ScrollPhysics {
   final int currentIndex;
@@ -51,12 +52,14 @@ class _MasterScreenState extends State<MasterScreen> {
   late PageController _pageController;
 
   final List<String> _pageTitles = [
-    'Discover',
+    'Home',
+    'Services',
+    'Products',
     'Reviews',
-    'Tickets',
-    'My Festivals',
+    'Purchases',
     'Profile',
   ];
+
 
   @override
   void initState() {
@@ -98,7 +101,7 @@ class _MasterScreenState extends State<MasterScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Row(
           children: [
-            Icon(Icons.logout, color: Color(0xFF6A1B9A)),
+            Icon(Icons.logout_rounded, color: Color(0xFF2F855A)),
             SizedBox(width: 8),
             Text("Logout"),
           ],
@@ -119,7 +122,7 @@ class _MasterScreenState extends State<MasterScreen> {
               ).pushNamedAndRemoveUntil('/', (route) => false);
             },
             style: TextButton.styleFrom(
-              foregroundColor: const Color(0xFF6A1B9A),
+              foregroundColor: const Color(0xFF2F855A),
             ),
             child: const Text("Logout"),
           ),
@@ -128,25 +131,30 @@ class _MasterScreenState extends State<MasterScreen> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          // Modern Header
+          // Modern Header with Green Gradient
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
-                end: Alignment.topRight,
-                colors: [const Color(0xFF6A1B9A), const Color(0xFF8E24AA)],
+                end: Alignment.bottomRight,
+                colors: [
+                  const Color(0xFF163A2A),
+                  const Color(0xFF20523A),
+                  const Color(0xFF2F855A),
+                ],
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF6A1B9A).withOpacity(0.3),
+                  color: const Color(0xFF2F855A).withOpacity(0.3),
                   spreadRadius: 1,
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
@@ -154,18 +162,33 @@ class _MasterScreenState extends State<MasterScreen> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
-                  vertical: 12,
+                  vertical: 14,
                 ),
                 child: Row(
                   children: [
+                    // Logo/Icon
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.spa_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
                     // Title
                     Expanded(
                       child: Text(
                         _pageTitles[_selectedIndex],
                         style: const TextStyle(
-                          fontSize: 20,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
+                          letterSpacing: 0.3,
                         ),
                       ),
                     ),
@@ -173,14 +196,14 @@ class _MasterScreenState extends State<MasterScreen> {
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: IconButton(
                         onPressed: _handleLogout,
                         icon: const Icon(
-                          Icons.logout,
+                          Icons.logout_rounded,
                           color: Colors.white,
-                          size: 20,
+                          size: 22,
                         ),
                         tooltip: 'Logout',
                       ),
@@ -199,71 +222,80 @@ class _MasterScreenState extends State<MasterScreen> {
                 _onPageChanged(index);
               },
               physics: const AlwaysScrollableScrollPhysics(),
-              children: const [
-                Placeholder(),
-                Placeholder(),
-                Placeholder(),
-                Placeholder(),
-                ProfileScreen(),
+              children: [
+                HomeScreen(onTileTap: _onItemTapped),
+                const Placeholder(),
+                const Placeholder(),
+                const Placeholder(),
+                const Placeholder(),
+                const ProfileScreen(),
               ],
             ),
           ),
 
-          // Modern Bottom Navigation
+          // Modern Bottom Navigation with Green Theme
           Container(
             height: 85,
             decoration: BoxDecoration(
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 1,
-                  blurRadius: 8,
-                  offset: const Offset(0, -2),
+                  color: Colors.grey.withOpacity(0.15),
+                  spreadRadius: 0,
+                  blurRadius: 12,
+                  offset: const Offset(0, -4),
                 ),
               ],
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
               child: Row(
                 children: [
-                  // Discover Tab
+                  // Home Tab
                   Expanded(
                     child: _buildNavigationItem(
                       index: 0,
-                      icon: Icons.explore,
-                      label: 'Discover',
+                      icon: Icons.home_rounded,
+                      label: 'Home',
+                    ),
+                  ),
+                  // Services Tab
+                  Expanded(
+                    child: _buildNavigationItem(
+                      index: 1,
+                      icon: Icons.spa_rounded,
+                      label: 'Services',
+                    ),
+                  ),
+                  // Products Tab
+                  Expanded(
+                    child: _buildNavigationItem(
+                      index: 2,
+                      icon: Icons.shopping_bag_rounded,
+                      label: 'Products',
                     ),
                   ),
                   // Reviews Tab
                   Expanded(
                     child: _buildNavigationItem(
-                      index: 1,
-                      icon: Icons.rate_review,
+                      index: 3,
+                      icon: Icons.rate_review_rounded,
                       label: 'Reviews',
                     ),
                   ),
-                  // Tickets Tab
+                  // Purchases Tab
                   Expanded(
                     child: _buildNavigationItem(
-                      index: 2,
-                      icon: Icons.confirmation_number,
-                      label: 'Tickets',
-                    ),
-                  ),
-                  // Festivals Tab
-                  Expanded(
-                    child: _buildNavigationItem(
-                      index: 3,
-                      icon: Icons.festival,
-                      label: 'My Festivals',
+                      index: 4,
+                      icon: Icons.shopping_cart_rounded,
+                      label: 'Purchases',
                     ),
                   ),
                   // Profile Tab
                   Expanded(
                     child: _buildNavigationItem(
-                      index: 4,
-                      icon: Icons.person,
+                      index: 5,
+                      icon: Icons.person_rounded,
                       label: 'Profile',
                     ),
                   ),
@@ -286,10 +318,10 @@ class _MasterScreenState extends State<MasterScreen> {
     return GestureDetector(
       onTap: () => _onItemTapped(index),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 1),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
         decoration: BoxDecoration(
           color: isSelected
-              ? const Color(0xFF6A1B9A).withOpacity(0.1)
+              ? const Color(0xFF2F855A).withOpacity(0.12)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
@@ -297,18 +329,38 @@ class _MasterScreenState extends State<MasterScreen> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              icon,
-              color: isSelected ? const Color(0xFF6A1B9A) : Colors.grey[600],
-              size: 24,
+            Flexible(
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? const Color(0xFF2F855A).withOpacity(0.15)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  icon,
+                  color: isSelected
+                      ? const Color(0xFF2F855A)
+                      : Colors.grey[600],
+                  size: 22,
+                ),
+              ),
             ),
             const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected ? const Color(0xFF6A1B9A) : Colors.grey[600],
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                  color: isSelected
+                      ? const Color(0xFF2F855A)
+                      : Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
