@@ -173,7 +173,7 @@ class _MasterScreenState extends State<MasterScreen> {
                         color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(
+                      child:  Icon(
                         Icons.spa_rounded,
                         color: Colors.white,
                         size: 24,
@@ -237,18 +237,9 @@ class _MasterScreenState extends State<MasterScreen> {
           Container(
             height: 85,
             decoration: BoxDecoration(
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.15),
-                  spreadRadius: 0,
-                  blurRadius: 12,
-                  offset: const Offset(0, -4),
-                ),
-              ],
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
               child: Row(
                 children: [
                   // Home Tab
