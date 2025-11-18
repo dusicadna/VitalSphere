@@ -301,7 +301,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
             // Pagination
             if (!_isLoading && _products.isNotEmpty)
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   boxShadow: [

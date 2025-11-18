@@ -20,7 +20,7 @@ class BasePagination extends StatelessWidget {
     final bool canGoNext = currentPage < totalPages - 1 && totalPages > 0;
 
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [

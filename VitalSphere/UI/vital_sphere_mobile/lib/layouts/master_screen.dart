@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vital_sphere_mobile/providers/user_provider.dart';
+import 'package:vital_sphere_mobile/providers/cart_provider.dart';
+import 'package:vital_sphere_mobile/model/cart.dart';
 import 'package:vital_sphere_mobile/screens/profile_screen.dart';
 import 'package:vital_sphere_mobile/screens/home_screen.dart';
 import 'package:vital_sphere_mobile/screens/product_list_screen.dart';
+import 'package:vital_sphere_mobile/screens/cart_screen.dart';
 
 class CustomPageViewScrollPhysics extends ScrollPhysics {
   final int currentIndex;
@@ -51,6 +55,7 @@ class MasterScreen extends StatefulWidget {
 class _MasterScreenState extends State<MasterScreen> {
   int _selectedIndex = 0;
   late PageController _pageController;
+  Cart? _cart;
 
   final List<String> _pageTitles = [
     'Home',
@@ -75,13 +80,57 @@ class _MasterScreenState extends State<MasterScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: 0);
+    _loadCart();
+    
+    // Listen to cart provider changes
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+    cartProvider.addListener(_onCartChanged);
+  }
+
+  void _onCartChanged() {
+    // Reload cart when provider notifies
+    if (mounted) {
+      _loadCart();
+    }
   }
 
   @override
   void dispose() {
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+    cartProvider.removeListener(_onCartChanged);
     _pageController.dispose();
     super.dispose();
   }
+
+  Future<void> _loadCart() async {
+    if (UserProvider.currentUser == null) return;
+
+    try {
+      final cartProvider = Provider.of<CartProvider>(context, listen: false);
+      final cart = await cartProvider.getByUserId(UserProvider.currentUser!.id);
+      
+      if (mounted) {
+        setState(() {
+          _cart = cart;
+        });
+      }
+    } catch (e) {
+      // Silently handle errors
+    }
+  }
+
+  void _navigateToCart() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const CartScreen(),
+      ),
+    ).then((_) {
+      // Reload cart when returning from cart screen
+      _loadCart();
+    });
+  }
+
 
   void _onItemTapped(int index) {
     setState(() {
@@ -191,6 +240,9 @@ class _MasterScreenState extends State<MasterScreen> {
                         ),
                       ),
                     ),
+                    // Cart Button with Badge
+                    _buildCartButton(_cart?.totalItems ?? 0),
+                    const SizedBox(width: 8),
                     // Logout Button
                     Container(
                       decoration: BoxDecoration(
@@ -343,6 +395,54 @@ class _MasterScreenState extends State<MasterScreen> {
         color: Colors.white,
         size: 24,
       ),
+    );
+  }
+
+  Widget _buildCartButton(int itemCount) {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: IconButton(
+            onPressed: _navigateToCart,
+            icon: const Icon(
+              Icons.shopping_cart_rounded,
+              color: Colors.white,
+              size: 22,
+            ),
+            tooltip: 'Cart',
+          ),
+        ),
+        if (itemCount > 0)
+          Positioned(
+            right: 6,
+            top: 6,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: const BoxDecoration(
+                color: Color(0xFFE53E3E),
+                shape: BoxShape.circle,
+              ),
+              constraints: const BoxConstraints(
+                minWidth: 18,
+                minHeight: 18,
+              ),
+              child: Text(
+                itemCount > 99 ? '99+' : '$itemCount',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+      ],
     );
   }
 
