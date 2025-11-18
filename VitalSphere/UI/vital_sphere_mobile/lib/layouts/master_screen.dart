@@ -60,6 +60,15 @@ class _MasterScreenState extends State<MasterScreen> {
     'Profile',
   ];
 
+  final List<IconData> _pageIcons = [
+    Icons.home_rounded,
+    Icons.spa_rounded,
+    Icons.shopping_bag_rounded,
+    Icons.rate_review_rounded,
+    Icons.shopping_cart_rounded,
+    Icons.person_rounded,
+  ];
+
 
   @override
   void initState() {
@@ -166,19 +175,8 @@ class _MasterScreenState extends State<MasterScreen> {
                 ),
                 child: Row(
                   children: [
-                    // Logo/Icon
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child:  Icon(
-                        Icons.spa_rounded,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                    ),
+                    // Logo/Icon - Changes based on selected tab
+                    _buildHeaderIcon(),
                     const SizedBox(width: 12),
                     // Title
                     Expanded(
@@ -295,6 +293,54 @@ class _MasterScreenState extends State<MasterScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildHeaderIcon() {
+    final user = UserProvider.currentUser;
+    final isProfilePage = _selectedIndex == 5;
+
+    // Show user profile picture if on profile page and user has picture
+    if (isProfilePage && user?.picture != null && user!.picture!.isNotEmpty) {
+      ImageProvider? imageProvider = ProfileScreen.getUserImageProvider(user.picture);
+
+      return Container(
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: Colors.white.withOpacity(0.3),
+            width: 2,
+          ),
+        ),
+        child: CircleAvatar(
+          radius: 12,
+          backgroundColor: Colors.white.withOpacity(0.2),
+          backgroundImage: imageProvider,
+          child: imageProvider == null
+              ? const Icon(
+                  Icons.person_rounded,
+                  color: Colors.white,
+                  size: 20,
+                )
+              : null,
+        ),
+      );
+    }
+
+    // Show icon for other pages
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(
+        _pageIcons[_selectedIndex],
+        color: Colors.white,
+        size: 24,
       ),
     );
   }
