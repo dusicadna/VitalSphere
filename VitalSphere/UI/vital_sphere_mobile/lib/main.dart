@@ -9,12 +9,16 @@ import 'package:vital_sphere_mobile/providers/brand_provider.dart';
 import 'package:vital_sphere_mobile/providers/cart_provider.dart';
 import 'package:vital_sphere_mobile/providers/city_provider.dart';
 import 'package:vital_sphere_mobile/providers/gender_provider.dart';
+import 'package:vital_sphere_mobile/providers/gift_provider.dart';
 import 'package:vital_sphere_mobile/providers/product_category_provider.dart';
 import 'package:vital_sphere_mobile/providers/product_provider.dart';
 import 'package:vital_sphere_mobile/providers/review_provider.dart';
 import 'package:vital_sphere_mobile/providers/user_provider.dart';
 import 'package:vital_sphere_mobile/providers/order_provider.dart';
 import 'package:vital_sphere_mobile/providers/appointment_provider.dart';
+import 'package:vital_sphere_mobile/providers/wellness_box_provider.dart';
+import 'package:vital_sphere_mobile/providers/wellness_service_category_provider.dart';
+import 'package:vital_sphere_mobile/providers/wellness_service_provider.dart';
 import 'package:vital_sphere_mobile/screens/register_screen.dart';
 import 'package:vital_sphere_mobile/utils/base_textfield.dart';
 
@@ -41,6 +45,10 @@ void main() async {
         ChangeNotifierProvider<CartProvider>(create: (_) => CartProvider()),
         ChangeNotifierProvider<OrderProvider>(create: (_) => OrderProvider()),
         ChangeNotifierProvider<AppointmentProvider>(create: (_) => AppointmentProvider()),
+        ChangeNotifierProvider<WellnessServiceProvider>(create: (_) => WellnessServiceProvider()),
+        ChangeNotifierProvider<WellnessServiceCategoryProvider>(create: (_) => WellnessServiceCategoryProvider()),
+        ChangeNotifierProvider<WellnessBoxProvider>(create: (_) => WellnessBoxProvider()),
+        ChangeNotifierProvider<GiftProvider>(create: (_) => GiftProvider()),
       ],
       child: const MyApp(),
     ),
