@@ -251,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     if (_upcomingAppointments.isNotEmpty)
                       TextButton(
-                        onPressed: () => widget.onTileTap(4), // Navigate to Purchases
+                        onPressed: () => widget.onTileTap(1), // Navigate to Purchases
                         child: const Text(
                           'View All',
                           style: TextStyle(

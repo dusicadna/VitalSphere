@@ -9,6 +9,7 @@ import 'package:vital_sphere_mobile/screens/product_list_screen.dart';
 import 'package:vital_sphere_mobile/screens/cart_screen.dart';
 import 'package:vital_sphere_mobile/screens/review_list_screen.dart';
 import 'package:vital_sphere_mobile/screens/purchases_screen.dart';
+import 'package:vital_sphere_mobile/screens/category_list_screen.dart';
 
 class CustomPageViewScrollPhysics extends ScrollPhysics {
   final int currentIndex;
@@ -277,7 +278,7 @@ class _MasterScreenState extends State<MasterScreen> {
               physics: const AlwaysScrollableScrollPhysics(),
               children: [
                 HomeScreen(onTileTap: _onItemTapped),
-                const Placeholder(),
+                const CategoryListScreen(),
                 const ProductListScreen(),
                 const ReviewListScreen(),
                 const PurchasesScreen(),
