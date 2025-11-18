@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:vital_sphere_mobile/model/gift.dart';
-import 'package:vital_sphere_mobile/providers/gift_provider.dart';
 import 'package:vital_sphere_mobile/utils/base_picture_cover.dart';
 import 'package:intl/intl.dart';
 
@@ -20,62 +18,6 @@ class PurchasesGiftsDetailsScreen extends StatefulWidget {
 
 class _PurchasesGiftsDetailsScreenState
     extends State<PurchasesGiftsDetailsScreen> {
-  bool _isLoading = false;
-  Gift? _currentGift;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentGift = widget.gift;
-  }
-
-  Future<void> _markAsPickedUp() async {
-    if (_isLoading) return;
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final giftProvider = Provider.of<GiftProvider>(context, listen: false);
-      final updatedGift = await giftProvider.markAsPickedUp(_currentGift!.id);
-
-      if (mounted) {
-        setState(() {
-          _currentGift = updatedGift;
-          _isLoading = false;
-        });
-        _showSuccessSnackbar('Gift marked as picked up successfully!');
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-        _showErrorSnackbar('Failed to mark gift as picked up: ${e.toString()}');
-      }
-    }
-  }
-
-  void _showSuccessSnackbar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: const Color(0xFF48BB78),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
-  void _showErrorSnackbar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
 
   Color _getStatusColor(String statusName) {
     switch (statusName.toLowerCase()) {
@@ -93,9 +35,7 @@ class _PurchasesGiftsDetailsScreenState
 
   @override
   Widget build(BuildContext context) {
-    final gift = _currentGift ?? widget.gift;
-    final canPickUp = gift.giftStatusName.toLowerCase() != 'picked up' &&
-        gift.giftStatusName.toLowerCase() != 'pickedup';
+    final gift = widget.gift;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
@@ -227,71 +167,6 @@ class _PurchasesGiftsDetailsScreenState
                 ],
               ),
             ),
-
-            // Pick Up Button (if applicable)
-            if (canPickUp)
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                width: double.infinity,
-                height: 50,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      const Color(0xFF2F855A),
-                      const Color(0xFF38A169),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF2F855A).withOpacity(0.3),
-                      spreadRadius: 1,
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _markAsPickedUp,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  child: _isLoading
-                      ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
-                          ),
-                        )
-                      : const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.check_circle_rounded,
-                              color: Colors.white,
-                            ),
-                            SizedBox(width: 8),
-                            Text(
-                              'Mark as Picked Up',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                ),
-              ),
           ],
         ),
       ),

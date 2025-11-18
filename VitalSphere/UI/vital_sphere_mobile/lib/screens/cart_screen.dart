@@ -398,7 +398,7 @@ class _CartScreenState extends State<CartScreen> {
                 },
                 icon: const Icon(Icons.shopping_bag_rounded, size: 20),
                 label: const Text(
-                  "Back to Cart",
+                  "Back to Products",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
