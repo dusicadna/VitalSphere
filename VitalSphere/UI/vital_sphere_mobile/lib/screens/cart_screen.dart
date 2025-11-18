@@ -179,7 +179,13 @@ class _CartScreenState extends State<CartScreen> {
           children: [
             const Icon(Icons.check_circle_rounded, color: Colors.white),
             const SizedBox(width: 12),
-            Text(message),
+            Expanded(
+              child: Text(
+                message,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+              ),
+            ),
           ],
         ),
         backgroundColor: const Color(0xFF2F855A),
@@ -208,20 +214,22 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            const Color(0xFFF8FAFC),
-            Colors.white,
-          ],
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              const Color(0xFFF8FAFC),
+              Colors.white,
+            ],
+          ),
         ),
-      ),
-      child: SafeArea(
-        child: Column(
-          children: [
+        child: SafeArea(
+          child: Column(
+            children: [
             // Header
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -253,15 +261,17 @@ class _CartScreenState extends State<CartScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       "My Cart",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                         color: Color(0xFF1F2937),
                         letterSpacing: -0.3,
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   ),
                   if (_cart != null && _cart!.cartItems.isNotEmpty)
@@ -292,7 +302,8 @@ class _CartScreenState extends State<CartScreen> {
             // Cart Summary
             if (!_isLoading && _cart != null && _cart!.cartItems.isNotEmpty)
               _buildCartSummary(),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -365,6 +376,8 @@ class _CartScreenState extends State<CartScreen> {
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
             ),
             const SizedBox(height: 32),
             Container(
@@ -532,6 +545,8 @@ class _CartScreenState extends State<CartScreen> {
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF2F855A),
                           ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                       ),
                       const SizedBox(width: 6),
@@ -588,7 +603,7 @@ class _CartScreenState extends State<CartScreen> {
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
-                            
+                            overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                           ),
                         ),
@@ -660,31 +675,39 @@ class _CartScreenState extends State<CartScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Total Items',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey[600],
-                          fontWeight: FontWeight.w500,
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'Total Items',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey[600],
+                            fontWeight: FontWeight.w500,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '${_cart!.totalItems} ${_cart!.totalItems == 1 ? 'item' : 'items'}',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF1F2937),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${_cart!.totalItems} ${_cart!.totalItems == 1 ? 'item' : 'items'}',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1F2937),
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   Flexible(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           'Total Amount',
@@ -695,6 +718,7 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
+                          textAlign: TextAlign.end,
                         ),
                         const SizedBox(height: 2),
                         Text(
@@ -707,6 +731,7 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
+                          textAlign: TextAlign.end,
                         ),
                       ],
                     ),
