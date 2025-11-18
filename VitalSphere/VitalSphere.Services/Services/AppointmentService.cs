@@ -24,6 +24,11 @@ namespace VitalSphere.Services.Services
             query = query.Include(a => a.User)
                          .Include(a => a.WellnessService);
 
+            if (search.UserId.HasValue)
+            {
+                query = query.Where(a => a.UserId == search.UserId.Value);
+            }
+
             if (!string.IsNullOrEmpty(search.UserFullName))
             {
                 query = query.Where(a => (a.User.FirstName + " " + a.User.LastName).Contains(search.UserFullName));

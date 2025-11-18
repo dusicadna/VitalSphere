@@ -1062,8 +1062,9 @@ class _AppointmentPaymentScreenState extends State<AppointmentPaymentScreen> {
 
   Future<bool> _isFirstAppointment(int userId) async {
     try {
+      // Check if user has any appointments - if they have 0 appointments, it's their first
       final appointmentProvider = Provider.of<AppointmentProvider>(context, listen: false);
-      final result = await appointmentProvider.get(
+      final appointmentsResult = await appointmentProvider.get(
         filter: {
           'page': 0,
           'pageSize': 1,
@@ -1072,7 +1073,7 @@ class _AppointmentPaymentScreenState extends State<AppointmentPaymentScreen> {
         },
       );
       // If totalCount is 0, it's their first appointment
-      return (result.totalCount ?? 0) == 0;
+      return (appointmentsResult.totalCount ?? 0) == 0;
     } catch (e) {
       // If error, assume it's not first to be safe
       return false;
@@ -1083,8 +1084,8 @@ class _AppointmentPaymentScreenState extends State<AppointmentPaymentScreen> {
     final isFirst = await _isFirstAppointment(userId);
     
     if (isFirst) {
-      // First appointment = 100% gift the first wellness box user hasn't received
-      return await _getFirstUnreceivedWellnessBoxId(userId);
+      // First appointment = 100% gift wellness box id = 1
+      return 1;
     } else {
       // Other appointments = 50/50 chance
       final random = Random();
@@ -1095,57 +1096,6 @@ class _AppointmentPaymentScreenState extends State<AppointmentPaymentScreen> {
         // 50% chance - no gift
         return null;
       }
-    }
-  }
-
-  Future<int?> _getFirstUnreceivedWellnessBoxId(int userId) async {
-    try {
-      // Get all gifts for this user
-      final giftProvider = Provider.of<GiftProvider>(context, listen: false);
-      final giftsResult = await giftProvider.get(
-        filter: {
-          'page': 0,
-          'pageSize': 1000,
-          'includeTotalCount': false,
-          'userId': userId,
-        },
-      );
-      
-      // Get list of wellness box IDs the user already has
-      final receivedBoxIds = (giftsResult.items ?? [])
-          .map((gift) => gift.wellnessBoxId)
-          .toSet();
-      
-      // Get all wellness boxes
-      final wellnessBoxProvider = Provider.of<WellnessBoxProvider>(context, listen: false);
-      final boxesResult = await wellnessBoxProvider.get(
-        filter: {
-          'page': 0,
-          'pageSize': 1000,
-          'includeTotalCount': false,
-        },
-      );
-      
-      final allBoxes = (boxesResult.items ?? [])
-          .where((box) => box.isActive)
-          .toList();
-      
-      if (allBoxes.isEmpty) return null;
-      
-      // Sort boxes by ID and find the first one user hasn't received
-      allBoxes.sort((a, b) => a.id.compareTo(b.id));
-      
-      for (final box in allBoxes) {
-        if (!receivedBoxIds.contains(box.id)) {
-          return box.id;
-        }
-      }
-      
-      // If user has all boxes, return the first one (lowest ID)
-      return allBoxes.first.id;
-    } catch (e) {
-      // If error, fallback to first box (id = 1) or null
-      return null;
     }
   }
 
@@ -1163,11 +1113,13 @@ class _AppointmentPaymentScreenState extends State<AppointmentPaymentScreen> {
       final boxes = result.items ?? [];
       if (boxes.isEmpty) return null;
       
-      // Filter active boxes
-      final activeBoxes = boxes.where((box) => box.isActive).toList();
+      // Filter active boxes and exclude id = 1 (starter box)
+      final activeBoxes = boxes
+          .where((box) => box.isActive && box.id != 1)
+          .toList();
       if (activeBoxes.isEmpty) return null;
       
-      // Pick random box
+      // Pick random box (excluding id = 1)
       final random = Random();
       final randomBox = activeBoxes[random.nextInt(activeBoxes.length)];
       return randomBox.id;

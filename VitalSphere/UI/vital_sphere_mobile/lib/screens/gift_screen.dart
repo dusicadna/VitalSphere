@@ -24,35 +24,6 @@ class GiftScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
-              // Gift Icon with Animation Effect
-              Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFFFFD700).withOpacity(0.3),
-                      const Color(0xFFFFA500).withOpacity(0.2),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFFFFD700).withOpacity(0.3),
-                      blurRadius: 30,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
-                child: const Icon(
-                  Icons.card_giftcard_rounded,
-                  size: 80,
-                  color: Color(0xFFFFD700),
-                ),
-              ),
-              const SizedBox(height: 32),
               // Congratulations Text
               const Text(
                 'Congratulations!',
