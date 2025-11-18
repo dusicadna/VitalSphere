@@ -42,8 +42,17 @@ class _ReviewSelectionScreenState extends State<ReviewSelectionScreen> {
       final appointmentProvider = Provider.of<AppointmentProvider>(context, listen: false);
       final reviewProvider = Provider.of<ReviewProvider>(context, listen: false);
 
-      // Load user's appointments
+      // Load appointments (backend doesn't filter by userId, so we'll filter client-side)
       final appointmentsResult = await appointmentProvider.get(
+        filter: {
+          'page': 0,
+          'pageSize': 10000, // Get all to filter client-side
+          'includeTotalCount': false,
+        },
+      );
+
+      // Load user's reviews to check which appointments they've already reviewed
+      final userReviewsResult = await reviewProvider.get(
         filter: {
           'page': 0,
           'pageSize': 1000,
@@ -52,27 +61,22 @@ class _ReviewSelectionScreenState extends State<ReviewSelectionScreen> {
         },
       );
 
-      // Load ALL reviews to check which appointments have reviews
-      // Since it's one-to-one relationship, we need to check all reviews for appointments
-      final allReviewsResult = await reviewProvider.get(
-        filter: {
-          'page': 0,
-          'pageSize': 10000, // Get all reviews to check appointments
-          'includeTotalCount': false,
-        },
-      );
-
       if (mounted) {
         setState(() {
-          _appointments = appointmentsResult.items ?? [];
+          final allAppointments = appointmentsResult.items ?? [];
           
-          // Filter appointments that don't have ANY reviews (one-to-one relationship)
-          final allReviewedAppointmentIds = (allReviewsResult.items ?? [])
+          // First filter: Only show appointments that belong to the current user
+          _appointments = allAppointments
+              .where((appointment) => appointment.userId == UserProvider.currentUser!.id)
+              .toList();
+          
+          // Second filter: Remove appointments that the user has already reviewed
+          final reviewedAppointmentIds = (userReviewsResult.items ?? [])
               .map((r) => r.appointmentId)
               .toSet();
           
           _unreviewedAppointments = _appointments
-              .where((appointment) => !allReviewedAppointmentIds.contains(appointment.id))
+              .where((appointment) => !reviewedAppointmentIds.contains(appointment.id))
               .toList();
 
           final totalCount = _unreviewedAppointments.length;
@@ -98,13 +102,13 @@ class _ReviewSelectionScreenState extends State<ReviewSelectionScreen> {
 
 
   Future<void> _createReviewForAppointment(Appointment appointment) async {
-    // Double-check that this appointment doesn't already have a review
-    // Check by querying reviews for this specific appointment
+    // Double-check that this appointment doesn't already have a review from this user
     try {
       final reviewProvider = Provider.of<ReviewProvider>(context, listen: false);
       final existingReviews = await reviewProvider.get(
         filter: {
           'appointmentId': appointment.id,
+          'userId': UserProvider.currentUser!.id,
           'page': 0,
           'pageSize': 1,
           'includeTotalCount': false,
