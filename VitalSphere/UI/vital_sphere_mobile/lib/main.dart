@@ -5,8 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
 import 'package:vital_sphere_mobile/layouts/master_screen.dart';
 import 'package:vital_sphere_mobile/providers/auth_provider.dart';
+import 'package:vital_sphere_mobile/providers/brand_provider.dart';
 import 'package:vital_sphere_mobile/providers/city_provider.dart';
 import 'package:vital_sphere_mobile/providers/gender_provider.dart';
+import 'package:vital_sphere_mobile/providers/product_category_provider.dart';
+import 'package:vital_sphere_mobile/providers/product_provider.dart';
 import 'package:vital_sphere_mobile/providers/review_provider.dart';
 import 'package:vital_sphere_mobile/providers/user_provider.dart';
 import 'package:vital_sphere_mobile/screens/register_screen.dart';
@@ -29,6 +32,9 @@ void main() async {
         ChangeNotifierProvider<ReviewProvider>(create: (_) => ReviewProvider()),
         ChangeNotifierProvider<CityProvider>(create: (_) => CityProvider()),
         ChangeNotifierProvider<GenderProvider>(create: (_) => GenderProvider()),
+        ChangeNotifierProvider<ProductProvider>(create: (_) => ProductProvider()),
+        ChangeNotifierProvider<ProductCategoryProvider>(create: (_) => ProductCategoryProvider()),
+        ChangeNotifierProvider<BrandProvider>(create: (_) => BrandProvider()),
       ],
       child: const MyApp(),
     ),

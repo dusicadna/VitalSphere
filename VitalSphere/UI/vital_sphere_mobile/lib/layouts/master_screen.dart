@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vital_sphere_mobile/providers/user_provider.dart';
 import 'package:vital_sphere_mobile/screens/profile_screen.dart';
 import 'package:vital_sphere_mobile/screens/home_screen.dart';
+import 'package:vital_sphere_mobile/screens/product_list_screen.dart';
 
 class CustomPageViewScrollPhysics extends ScrollPhysics {
   final int currentIndex;
@@ -223,7 +224,7 @@ class _MasterScreenState extends State<MasterScreen> {
               children: [
                 HomeScreen(onTileTap: _onItemTapped),
                 const Placeholder(),
-                const Placeholder(),
+                const ProductListScreen(),
                 const Placeholder(),
                 const Placeholder(),
                 const ProfileScreen(),
